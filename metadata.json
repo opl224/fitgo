@@ -1,0 +1,9 @@
+{
+  "name": "Fit Go",
+  "description": "A mobile-first workout tracking application with AI-powered insights, real-time GPS tracking, and a clean map interface.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera",
+    "microphone"
+  ]
+}
