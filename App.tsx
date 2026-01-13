@@ -78,6 +78,7 @@ import { StatCard } from "./components/StatCard";
 import { CustomDialog } from "./components/CustomDialog";
 import { AboutScreen } from "./components/AboutScreen";
 import { TermsScreen } from "./components/TermsScreen";
+import { checkForUpdate } from "./utils/updateService";
 
 const translations = { en, id, jp };
 
@@ -93,9 +94,9 @@ const calculateDistance = (
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 };
@@ -195,11 +196,11 @@ const App: React.FC = () => {
       return saved
         ? JSON.parse(saved)
         : {
-            enabled: true,
-            paceAlerts: true,
-            distanceMilestones: true,
-            alertFrequency: 60,
-          };
+          enabled: true,
+          paceAlerts: true,
+          distanceMilestones: true,
+          alertFrequency: 60,
+        };
     } catch {
       return {
         enabled: true,
@@ -230,6 +231,27 @@ const App: React.FC = () => {
   const [isConfirmingBack, setIsConfirmingBack] = useState(false);
   const [isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [gpsError, setGpsError] = useState<string | null>(null);
+
+  // --- Update State ---
+  const APP_VERSION = "1.0.1";
+  const [updateInfo, setUpdateInfo] = useState({
+    hasUpdate: false,
+    latestVersion: APP_VERSION,
+    downloadUrl: ""
+  });
+  const [dashboardUpdateSeen, setDashboardUpdateSeen] = useState(false);
+  const [settingsUpdateSeen, setSettingsUpdateSeen] = useState(false);
+
+  // Check for updates
+  useEffect(() => {
+    const check = async () => {
+      const info = await checkForUpdate(APP_VERSION);
+      if (info.hasUpdate) {
+        setUpdateInfo(info);
+      }
+    };
+    check();
+  }, []);
 
   // --- Refs ---
   const timerRef = useRef<number | null>(null);
@@ -415,9 +437,8 @@ const App: React.FC = () => {
 
       // Try Capacitor Filesystem + Share to save/send file on native
       try {
-        const filename = `fitgo-backup-${
-          new Date().toISOString().split("T")[0]
-        }.json`;
+        const filename = `fitgo-backup-${new Date().toISOString().split("T")[0]
+          }.json`;
         const saved = await Filesystem.writeFile({
           path: filename,
           data: json,
@@ -447,9 +468,8 @@ const App: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `fitgo-backup-${
-        new Date().toISOString().split("T")[0]
-      }.json`;
+      a.download = `fitgo-backup-${new Date().toISOString().split("T")[0]
+        }.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -669,7 +689,13 @@ const App: React.FC = () => {
             userName={userName}
             weather={weather}
             profilePhoto={profilePhoto}
-            onOpenProfile={() => setCurrentScreen("profile")}
+            onOpenProfile={() => {
+              // If update is available and not seen on dashboard, mark as seen
+              if (updateInfo.hasUpdate && !dashboardUpdateSeen) {
+                setDashboardUpdateSeen(true);
+              }
+              setCurrentScreen("profile");
+            }}
             runHistory={runHistory}
             unitSystem={unitSystem}
             language={language}
@@ -682,14 +708,16 @@ const App: React.FC = () => {
             }}
             onPrepareRun={() => setCurrentScreen("run")}
             onStartWorkout={() => setCurrentScreen("workout")}
-            setSelectedRunType={() => {}}
-            setSelectedPresetName={() => {}}
-            setTargetPace={() => {}}
+            setSelectedRunType={() => { }}
+            setSelectedPresetName={() => { }}
+            setTargetPace={() => { }}
             getTranslatedRunType={(type) =>
               t[type.toLowerCase().replace(/\s/g, "")] || type
             }
             isLoading={isWeatherLoading}
             onRefresh={handleRefresh}
+            // Update Props
+            hasUpdate={updateInfo.hasUpdate && !dashboardUpdateSeen}
           />
         )}
 
@@ -708,9 +736,8 @@ const App: React.FC = () => {
             />
 
             <div
-              className={`absolute top-12 left-0 w-full px-6 flex justify-between items-center z-[400] transition-opacity duration-300 ${
-                isZenMode ? "opacity-0" : "opacity-100"
-              }`}
+              className={`absolute top-12 left-0 w-full px-6 flex justify-between items-center z-[400] transition-opacity duration-300 ${isZenMode ? "opacity-0" : "opacity-100"
+                }`}
             >
               <button
                 onClick={handleBackRequest}
@@ -753,11 +780,10 @@ const App: React.FC = () => {
 
             {/* Float Stats in Zen Mode */}
             <div
-              className={`absolute left-1/2 -translate-x-1/2 z-[600] transition-all duration-700 pointer-events-none ${
-                isZenMode
+              className={`absolute left-1/2 -translate-x-1/2 z-[600] transition-all duration-700 pointer-events-none ${isZenMode
                   ? "bottom-36 opacity-100 translate-y-0 scale-100"
                   : "bottom-10 opacity-0 translate-y-12 scale-90"
-              }`}
+                }`}
             >
               <div className="bg-white/85 dark:bg-gray-900/85 backdrop-blur-3xl px-8 py-4 rounded-full shadow-2xl border border-white/30 dark:border-white/10 flex items-center gap-6 whitespace-nowrap">
                 <div className="flex flex-col items-center">
@@ -785,13 +811,12 @@ const App: React.FC = () => {
 
             {/* Bottom Controls Sheet */}
             <div
-              className={`mt-auto bg-white dark:bg-gray-900 rounded-t-[56px] shadow-[0_-20px_50px_rgba(0,0,0,0.15)] z-[500] px-8 pt-4 transition-all duration-500 relative flex flex-col ${
-                isZenMode
+              className={`mt-auto bg-white dark:bg-gray-900 rounded-t-[56px] shadow-[0_-20px_50px_rgba(0,0,0,0.15)] z-[500] px-8 pt-4 transition-all duration-500 relative flex flex-col ${isZenMode
                   ? "h-0 opacity-0 pointer-events-none translate-y-full"
                   : isSheetExpanded
-                  ? "h-[75vh]"
-                  : "h-[38vh]"
-              }`}
+                    ? "h-[75vh]"
+                    : "h-[38vh]"
+                }`}
             >
               <div
                 className="w-full flex justify-center py-4 cursor-pointer"
@@ -828,11 +853,10 @@ const App: React.FC = () => {
 
                 {/* Stats Grid 2x2 - Hidden when collapsed */}
                 <div
-                  className={`grid grid-cols-2 gap-4 transition-all duration-500 overflow-hidden ${
-                    isSheetExpanded
+                  className={`grid grid-cols-2 gap-4 transition-all duration-500 overflow-hidden ${isSheetExpanded
                       ? "max-h-[500px] opacity-100 mb-8"
                       : "max-h-0 opacity-0 mb-0"
-                  }`}
+                    }`}
                 >
                   {/* Speed Card */}
                   <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-[32px] flex flex-col gap-3">
@@ -924,11 +948,10 @@ const App: React.FC = () => {
                           triggerHaptic(50);
                           setIsRunning(!isRunning);
                         }}
-                        className={`flex-1 font-black py-7 rounded-[32px] shadow-2xl text-xl flex items-center justify-center gap-4 active:scale-95 uppercase tracking-[0.2em] transition-all border-b-4 ${
-                          isRunning
+                        className={`flex-1 font-black py-7 rounded-[32px] shadow-2xl text-xl flex items-center justify-center gap-4 active:scale-95 uppercase tracking-[0.2em] transition-all border-b-4 ${isRunning
                             ? "bg-orange-500 text-white border-orange-700/50"
                             : "bg-green-500 text-white border-green-700/50"
-                        }`}
+                          }`}
                       >
                         {isRunning ? (
                           <>
@@ -1024,16 +1047,25 @@ const App: React.FC = () => {
             unitSystem={unitSystem}
             setUnitSystem={setUnitSystem}
             customDistanceUnit="km"
-            setCustomDistanceUnit={() => {}}
+            setCustomDistanceUnit={() => { }}
             customAltitudeUnit="m"
-            setCustomAltitudeUnit={() => {}}
+            setCustomAltitudeUnit={() => { }}
             audioCues={audioCues}
             setAudioCues={setAudioCues}
             paceZones={[]}
-            setPaceZones={() => {}}
-            onClearCache={() => {}}
+            setPaceZones={() => { }}
+            onClearCache={() => { }}
             t={t}
             onOpenAbout={() => setCurrentScreen("about")}
+            // Update Props
+            appVersion={APP_VERSION}
+            updateInfo={{
+              hasUpdate: updateInfo.hasUpdate,
+              latestVersion: updateInfo.latestVersion,
+              downloadUrl: updateInfo.downloadUrl,
+              isSeen: settingsUpdateSeen
+            }}
+            onAckUpdate={() => setSettingsUpdateSeen(true)}
           />
         )}
 

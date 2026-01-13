@@ -35,6 +35,7 @@ interface DashboardProps {
   getTranslatedRunType: (type: string) => string;
   isLoading?: boolean;
   onRefresh?: () => Promise<void>;
+  hasUpdate?: boolean;
 }
 
 const SkeletonItem = () => (
@@ -66,6 +67,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   getTranslatedRunType,
   isLoading = false,
   onRefresh,
+  hasUpdate = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const activityListRef = useRef<HTMLDivElement>(null);
@@ -186,6 +188,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <img src={profilePhoto} className="w-full h-full object-cover" />
             ) : (
               <User size={28} className="text-gray-400 mx-auto mt-3" />
+            )}
+            {hasUpdate && (
+              <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-gray-800 animate-pulse"></div>
             )}
           </button>
         </div>
@@ -331,11 +336,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     >
                       <div className="flex items-center gap-4">
                         <div
-                          className={`w-12 h-12 ${
-                            isWorkout
-                              ? "bg-orange-50 dark:bg-orange-900/20 text-orange-500"
-                              : "bg-blue-50 dark:bg-blue-900/20 text-blue-600"
-                          } rounded-2xl flex items-center justify-center shrink-0`}
+                          className={`w-12 h-12 ${isWorkout
+                            ? "bg-orange-50 dark:bg-orange-900/20 text-orange-500"
+                            : "bg-blue-50 dark:bg-blue-900/20 text-blue-600"
+                            } rounded-2xl flex items-center justify-center shrink-0`}
                         >
                           {isWorkout ? (
                             <Dumbbell size={20} />
@@ -361,13 +365,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             {isWorkout
                               ? session.distance
                               : getDistanceDisplay(session.distance, unitSystem)
-                                  .value}
+                                .value}
                           </span>
                           <span className="text-[10px] font-bold text-gray-400 uppercase mb-1">
                             {isWorkout
                               ? "%"
                               : getDistanceDisplay(session.distance, unitSystem)
-                                  .unit}
+                                .unit}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tight">
