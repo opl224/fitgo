@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 public
-android
+
 
 # Editor directories and files
 .vscode/*
@@ -40,7 +40,7 @@ build/
 .nuxt/
 
 # Capacitor
-android/
+
 ios/
 
 # Environment

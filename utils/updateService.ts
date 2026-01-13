@@ -10,7 +10,7 @@ export const checkForUpdate = async (currentVersion: string): Promise<UpdateInfo
     // IMPORTANT: Verify this URL matches your repository structure.
     // If your project is in a subdirectory (e.g. react/fitgo), adjust the path accordingly.
     // Example: https://raw.githubusercontent.com/opl224/fitgo/main/react/fitgo/public/version.json
-    const response = await fetch("https://raw.githubusercontent.com/opl224/fitgo/main/react/fitgo/public/version.json");
+    const response = await fetch("https://opl224.github.io/fitgo-updates/version.json");
 
     if (!response.ok) {
       return { hasUpdate: false, latestVersion: currentVersion, downloadUrl: "" };

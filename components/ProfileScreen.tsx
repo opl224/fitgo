@@ -123,14 +123,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       <div className="p-6 pt-12 flex items-center bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 z-20 rounded-b-[64px] shadow-xl pb-12 transition-all">
         <button
           onClick={onBack}
-          className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all"
         >
-          <ArrowLeft size={24} className="text-gray-800 dark:text-white" />
+          <ArrowLeft size={24} />
         </button>
-        <span className="mx-auto font-black text-lg text-gray-800 dark:text-white uppercase tracking-[0.2em]">
+        <span className="mx-auto font-black text-xl text-gray-800 dark:text-white uppercase tracking-[0.2em]">
           {t.settings}
         </span>
-        <div className="w-9"></div>
+        <div className="w-12"></div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar pb-24 -mt-4 transition-all z-10">

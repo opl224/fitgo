@@ -109,8 +109,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isLoading) return;
-    touchStartY.current = e.touches[0].clientY;
-    setIsPulling(true);
+    const scrollTop = containerRef.current?.scrollTop || 0;
+    if (scrollTop === 0) {
+      touchStartY.current = e.touches[0].clientY;
+      setIsPulling(true);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -118,8 +121,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     const currentY = e.touches[0].clientY;
     const diff = currentY - touchStartY.current;
     if (diff > 0) {
-      // Apply some resistance
-      const pull = Math.min(diff * 0.4, PULL_THRESHOLD + 20);
+      // Apply elastic resistance for smoother feel
+      const pull = Math.min(diff * 0.5, PULL_THRESHOLD + 30);
       setPullDistance(pull);
     }
   };

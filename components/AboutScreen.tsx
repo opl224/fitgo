@@ -52,7 +52,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({
             Fit GO
           </h2>
           <p className="text-[12px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.3em]">
-            Version 1.0.0
+            Version 1.0.1
           </p>
         </div>
 

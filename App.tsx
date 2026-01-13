@@ -430,7 +430,7 @@ const App: React.FC = () => {
           localStorage.getItem("userPhysicalProfile") || "null"
         ),
         exportDate: new Date().toISOString(),
-        appVersion: "1.0.0",
+        appVersion: "1.0.1",
       };
 
       const json = JSON.stringify(backupData, null, 2);
@@ -453,7 +453,9 @@ const App: React.FC = () => {
               url: fileUri,
             });
             triggerHaptic(100);
-            alert(t.exportSuccess || "Backup saved");
+            setExportDialogMsg(t.exportSuccess || "Backup saved");
+            setExportDialogType("success");
+            setExportDialogOpen(true);
             return;
           } catch (shareErr) {
             console.debug("Share failed, fallback to download", shareErr);
@@ -475,10 +477,14 @@ const App: React.FC = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       triggerHaptic(100);
-      alert(t.exportSuccess || "Backup saved");
+      setExportDialogMsg(t.exportSuccess || "Backup saved");
+      setExportDialogType("success");
+      setExportDialogOpen(true);
     } catch (error) {
       console.error("Export failed:", error);
-      alert(t.exportError || "Gagal mengekspor data.");
+      setExportDialogMsg(t.exportError || "Gagal mengekspor data.");
+      setExportDialogType("danger");
+      setExportDialogOpen(true);
     }
   };
 
@@ -522,11 +528,15 @@ const App: React.FC = () => {
           );
         }
 
-        alert(t.importSuccess);
+        setImportDialogMsg(t.importSuccess);
+        setImportDialogType("success");
+        setImportDialogOpen(true);
         triggerHaptic([50, 50, 50]);
       } catch (error) {
         console.error("Import failed:", error);
-        alert(t.importError);
+        setImportDialogMsg(t.importError);
+        setImportDialogType("danger");
+        setImportDialogOpen(true);
       }
     };
     reader.readAsText(file);
@@ -554,6 +564,11 @@ const App: React.FC = () => {
   const [importDialogType, setImportDialogType] = useState<
     "success" | "danger" | "info"
   >("success");
+
+  // Exit confirmation states
+  const [showExitToast, setShowExitToast] = useState(false);
+  const exitPressTimeRef = useRef<number>(0);
+  const EXIT_TIMEOUT = 2000; // 2 seconds
 
   const handleBackRequest = useCallback(() => {
     // Let registered back handlers (components) capture the event first
@@ -584,6 +599,28 @@ const App: React.FC = () => {
       setCurrentScreen("profile");
       return;
     }
+
+    // Exit confirmation on dashboard
+    if (currentScreen === "dashboard") {
+      const now = Date.now();
+      if (now - exitPressTimeRef.current < EXIT_TIMEOUT) {
+        // Second press within timeout - exit app
+        try {
+          if (CapacitorApp && typeof CapacitorApp.exitApp === "function") {
+            CapacitorApp.exitApp();
+          }
+        } catch (e) {
+          console.debug("exitApp not available");
+        }
+        return;
+      }
+      // First press - show toast
+      exitPressTimeRef.current = now;
+      setShowExitToast(true);
+      setTimeout(() => setShowExitToast(false), EXIT_TIMEOUT);
+      return;
+    }
+
     setCurrentScreen("dashboard");
   }, [currentScreen, isRunning, elapsedTime, prevScreen]);
 
@@ -781,8 +818,8 @@ const App: React.FC = () => {
             {/* Float Stats in Zen Mode */}
             <div
               className={`absolute left-1/2 -translate-x-1/2 z-[600] transition-all duration-700 pointer-events-none ${isZenMode
-                  ? "bottom-36 opacity-100 translate-y-0 scale-100"
-                  : "bottom-10 opacity-0 translate-y-12 scale-90"
+                ? "bottom-36 opacity-100 translate-y-0 scale-100"
+                : "bottom-10 opacity-0 translate-y-12 scale-90"
                 }`}
             >
               <div className="bg-white/85 dark:bg-gray-900/85 backdrop-blur-3xl px-8 py-4 rounded-full shadow-2xl border border-white/30 dark:border-white/10 flex items-center gap-6 whitespace-nowrap">
@@ -812,10 +849,10 @@ const App: React.FC = () => {
             {/* Bottom Controls Sheet */}
             <div
               className={`mt-auto bg-white dark:bg-gray-900 rounded-t-[56px] shadow-[0_-20px_50px_rgba(0,0,0,0.15)] z-[500] px-8 pt-4 transition-all duration-500 relative flex flex-col ${isZenMode
-                  ? "h-0 opacity-0 pointer-events-none translate-y-full"
-                  : isSheetExpanded
-                    ? "h-[75vh]"
-                    : "h-[38vh]"
+                ? "h-0 opacity-0 pointer-events-none translate-y-full"
+                : isSheetExpanded
+                  ? "h-[75vh]"
+                  : "h-[38vh]"
                 }`}
             >
               <div
@@ -854,8 +891,8 @@ const App: React.FC = () => {
                 {/* Stats Grid 2x2 - Hidden when collapsed */}
                 <div
                   className={`grid grid-cols-2 gap-4 transition-all duration-500 overflow-hidden ${isSheetExpanded
-                      ? "max-h-[500px] opacity-100 mb-8"
-                      : "max-h-0 opacity-0 mb-0"
+                    ? "max-h-[500px] opacity-100 mb-8"
+                    : "max-h-0 opacity-0 mb-0"
                     }`}
                 >
                   {/* Speed Card */}
@@ -949,8 +986,8 @@ const App: React.FC = () => {
                           setIsRunning(!isRunning);
                         }}
                         className={`flex-1 font-black py-7 rounded-[32px] shadow-2xl text-xl flex items-center justify-center gap-4 active:scale-95 uppercase tracking-[0.2em] transition-all border-b-4 ${isRunning
-                            ? "bg-orange-500 text-white border-orange-700/50"
-                            : "bg-green-500 text-white border-green-700/50"
+                          ? "bg-orange-500 text-white border-orange-700/50"
+                          : "bg-green-500 text-white border-green-700/50"
                           }`}
                       >
                         {isRunning ? (
@@ -1079,6 +1116,40 @@ const App: React.FC = () => {
 
         {currentScreen === "terms" && (
           <TermsScreen onBack={() => setCurrentScreen("about")} t={t} />
+        )}
+
+        {/* Export/Import Dialogs */}
+        <CustomDialog
+          isOpen={isExportDialogOpen}
+          onClose={() => setExportDialogOpen(false)}
+          onConfirm={() => setExportDialogOpen(false)}
+          title={exportDialogType === "success" ? t.success || "Berhasil" : t.error || "Error"}
+          message={exportDialogMsg}
+          confirmText="OK"
+          cancelText=""
+          type={exportDialogType}
+        />
+
+        <CustomDialog
+          isOpen={isImportDialogOpen}
+          onClose={() => setImportDialogOpen(false)}
+          onConfirm={() => setImportDialogOpen(false)}
+          title={importDialogType === "success" ? t.success || "Berhasil" : t.error || "Error"}
+          message={importDialogMsg}
+          confirmText="OK"
+          cancelText=""
+          type={importDialogType}
+        />
+
+        {/* Exit Toast */}
+        {showExitToast && (
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] animate-in slide-in-from-bottom-4 duration-300">
+            <div className="bg-gray-900 dark:bg-gray-800 text-white px-6 py-4 rounded-2xl shadow-2xl border border-gray-700">
+              <p className="text-sm font-black uppercase tracking-widest">
+                {t.pressAgainToExit || "Tekan lagi untuk keluar"}
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </ErrorBoundary>

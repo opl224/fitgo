@@ -24,70 +24,72 @@ export const TermsScreen: React.FC<TermsScreenProps> = ({ onBack, t }) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-12 no-scrollbar pb-24 z-10">
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-8 rounded-[40px] flex items-center gap-5 border border-blue-100 dark:border-blue-900/30">
-          <ShieldAlert size={40} className="text-blue-600" />
+      <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar pb-24 -mt-4 transition-all z-10">
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-[32px] flex items-center gap-4 border border-blue-100 dark:border-blue-900/30">
+          <ShieldAlert size={32} className="text-blue-600 shrink-0" />
           <div>
-            <h3 className="text-sm font-black text-blue-600 uppercase tracking-widest">
+            <h3 className="text-xs font-black text-blue-600 uppercase tracking-widest mb-1">
               {t.termsImportant}
             </h3>
-            <p className="text-base font-medium text-gray-600 dark:text-gray-300">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
               {t.termsReadCarefully}
             </p>
           </div>
         </div>
 
         <section className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-sm">
+            <h4 className="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-3">
               {t.termsSection1Title}
             </h4>
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
               {t.termsSection1Desc}
             </p>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-sm">
+            <h4 className="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-3">
               {t.termsSection2Title}
             </h4>
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
               {t.termsSection2Desc}
             </p>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-sm">
+            <h4 className="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-3">
               {t.termsSection3Title}
             </h4>
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
               {t.termsSection3Desc}
             </p>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-sm">
+            <h4 className="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-3">
               {t.termsSection4Title}
             </h4>
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
               {t.termsSection4Desc}
             </p>
           </div>
         </section>
 
-        <div className="p-8 bg-gray-50 dark:bg-gray-800 rounded-[40px] border border-gray-100 dark:border-gray-800 space-y-4">
-          <div className="flex items-center gap-4 mb-2">
-            <Mail size={24} className="text-blue-600" />
-            <h4 className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">
+        <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-[32px] border border-gray-100 dark:border-gray-800 space-y-3">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600">
+              <Mail size={20} />
+            </div>
+            <h4 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">
               {t.termsQuestionsIssues}
             </h4>
           </div>
-          <p className="text-base text-gray-500 dark:text-gray-400 font-medium leading-relaxed">
+          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium leading-relaxed">
             {t.termsContactDesc}
           </p>
           <a
             href="mailto:siapaajaboleh202@gmail.com"
-            className="inline-block text-xl font-black text-blue-600 dark:text-blue-400 border-b-2 border-blue-600/20 pb-1"
+            className="inline-block text-base font-black text-blue-600 dark:text-blue-400 border-b-2 border-blue-600/20 pb-1"
           >
             siapaajaboleh202@gmail.com
           </a>

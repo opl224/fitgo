@@ -178,11 +178,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 setFilterType("all");
                 setCurrentPage(1);
               }}
-              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${
-                filterType === "all"
+              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${filterType === "all"
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
-              }`}
+                }`}
             >
               {t.allExercises || "All"}
             </button>
@@ -191,11 +190,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 setFilterType("run");
                 setCurrentPage(1);
               }}
-              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
-                filterType === "run"
+              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${filterType === "run"
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
-              }`}
+                }`}
             >
               <Activity size={14} /> {t.outdoorRun}
             </button>
@@ -204,11 +202,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 setFilterType("workout");
                 setCurrentPage(1);
               }}
-              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
-                filterType === "workout"
+              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${filterType === "workout"
                   ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
-              }`}
+                }`}
             >
               <Dumbbell size={14} /> {t.training}
             </button>
@@ -265,10 +262,15 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={onExportData}
-              className="flex items-center justify-center gap-3 bg-gray-50 dark:bg-gray-700/50 py-4 rounded-2xl active:scale-95 transition-all group"
+              disabled={runHistory.length === 0}
+              className={`flex items-center justify-center gap-3 py-4 rounded-2xl transition-all group ${runHistory.length === 0
+                  ? "bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed"
+                  : "bg-gray-50 dark:bg-gray-700/50 active:scale-95"
+                }`}
             >
-              <Download size={18} className="text-blue-600" />
-              <span className="text-[11px] font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">
+              <Download size={18} className={runHistory.length === 0 ? "text-gray-400" : "text-blue-600"} />
+              <span className={`text-[11px] font-black uppercase tracking-widest ${runHistory.length === 0 ? "text-gray-400" : "text-gray-700 dark:text-gray-200"
+                }`}>
                 {t.exportData}
               </span>
             </button>
@@ -338,20 +340,18 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   <div
                     key={session.id}
                     onClick={() => onHistorySelect(session)}
-                    className={`bg-white dark:bg-gray-900 rounded-[48px] p-8 shadow-sm border border-gray-100 dark:border-gray-800 active:scale-[0.98] transition-all cursor-pointer group hover:border-blue-500/30 relative overflow-hidden ${
-                      isDeleting
+                    className={`bg-white dark:bg-gray-900 rounded-[48px] p-8 shadow-sm border border-gray-100 dark:border-gray-800 active:scale-[0.98] transition-all cursor-pointer group hover:border-blue-500/30 relative overflow-hidden ${isDeleting
                         ? "opacity-0 scale-95"
                         : "opacity-100 scale-100"
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between items-start mb-8">
                       <div className="flex items-center gap-5">
                         <div
-                          className={`w-14 h-14 ${
-                            isWorkout
+                          className={`w-14 h-14 ${isWorkout
                               ? "bg-orange-50 dark:bg-orange-950 text-orange-500"
                               : "bg-blue-50 dark:bg-blue-950 text-blue-600"
-                          } rounded-[24px] flex items-center justify-center shadow-inner`}
+                            } rounded-[24px] flex items-center justify-center shadow-inner`}
                         >
                           {isWorkout ? (
                             <Dumbbell size={28} />
@@ -396,11 +396,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                         </span>
                         <div className="flex items-baseline gap-0.5">
                           <span
-                            className={`text-2xl font-black tabular-nums tracking-tighter ${
-                              isWorkout
+                            className={`text-2xl font-black tabular-nums tracking-tighter ${isWorkout
                                 ? "text-orange-500"
                                 : "text-gray-900 dark:text-white"
-                            }`}
+                              }`}
                           >
                             {displayDistance.value}
                           </span>
@@ -450,11 +449,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className={`p-5 rounded-[24px] transition-all active:scale-90 ${
-                    currentPage === 1
+                  className={`p-5 rounded-[24px] transition-all active:scale-90 ${currentPage === 1
                       ? "text-gray-200 dark:text-gray-800"
                       : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
-                  }`}
+                    }`}
                 >
                   <ChevronLeft size={24} />
                 </button>
@@ -476,11 +474,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className={`p-5 rounded-[24px] transition-all active:scale-90 ${
-                    currentPage === totalPages
+                  className={`p-5 rounded-[24px] transition-all active:scale-90 ${currentPage === totalPages
                       ? "text-gray-200 dark:text-gray-800"
                       : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
-                  }`}
+                    }`}
                 >
                   <ChevronRight size={24} />
                 </button>
