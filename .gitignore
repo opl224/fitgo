@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 public
+android
+locale
+icons
+utils
 
 
 # Editor directories and files
