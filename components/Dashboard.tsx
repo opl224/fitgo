@@ -1,10 +1,9 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import {
   User,
   MapPin,
   ChevronRight,
   Dumbbell,
-  Activity,
   Thermometer,
   Clock,
   RefreshCw,
@@ -37,6 +36,89 @@ interface DashboardProps {
   onRefresh?: () => Promise<void>;
   hasUpdate?: boolean;
 }
+
+const WeatherVisual: React.FC<{ weather: WeatherData | null; timePeriod: "day" | "afternoon" | "night" }> = ({ weather, timePeriod }) => {
+  if (!weather) return null;
+
+  const code = weather.weathercode;
+  const isRain = (code >= 51 && code <= 67) || (code >= 80 && code <= 99);
+  const isCloudy = (code >= 1 && code <= 3) || (code >= 45 && code <= 48);
+  const isClear = code === 0;
+
+  return (
+    <div className="weather-visual-container">
+      {/* Night Sky: Stars (Always behind everything at night) */}
+      {timePeriod === "night" && (
+        <div className="star-container">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="star"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                animationDuration: `${Math.random() * 3 + 2}s`,
+                animationDelay: `${Math.random() * 5}s`,
+                opacity: Math.random() * 0.7 + 0.3,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Sun/Moon Visuals (Behind clouds) */}
+      {(timePeriod === "day" || timePeriod === "afternoon") && (isClear || code === 1 || code === 2) && (
+        <>
+          <div className={timePeriod === "day" ? "sun-glow" : "sun-glow !bg-[radial-gradient(circle,#ffc371_0%,transparent_70%)]"}
+            style={{ opacity: (code === 1 || code === 2) ? 0.6 : 1 }} />
+          <div className={timePeriod === "day" ? "sun-core" : "sun-sunset-core"}
+            style={{ opacity: (code === 1 || code === 2) ? 0.8 : 1 }} />
+        </>
+      )}
+
+      {timePeriod === "night" && isClear && (
+        <>
+          <div className="moon-glow" />
+          <div className="moon-visual" />
+        </>
+      )}
+
+      {/* Clouds (Top level) */}
+      {(isCloudy || isRain) && (
+        <div className="cloud-group" style={{ '--cloud-color': (timePeriod === 'night' ? '#ffffff' : '#b3e5fc') } as React.CSSProperties}>
+          <div className="cloud-front">
+            <span className="cloud-part left-front" />
+            <span className="cloud-part right-front" />
+          </div>
+          <div className="cloud-back">
+            <span className="cloud-part left-back" />
+            <span className="cloud-part right-back" />
+          </div>
+          {isRain && (
+            <div className="rain-drops">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="drop"
+                  style={{
+                    left: `${15 + i * 12}%`,
+                    top: `${35 + (i % 3) * 12}%`,
+                    animationDelay: `${i * 0.15}s`,
+                    height: '14px',
+                    width: '3px',
+                    backgroundColor: '#60a5fa'
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const SkeletonItem = () => (
   <div className="bg-white dark:bg-gray-900 p-6 rounded-[36px] border border-gray-50 dark:border-gray-800 flex flex-col justify-between h-[160px] w-[240px] shrink-0 animate-pulse">
@@ -97,6 +179,35 @@ export const Dashboard: React.FC<DashboardProps> = ({
     const timeStr = new Intl.DateTimeFormat(locale, timeOptions).format(now);
     return `${dateStr} • ${timeStr}`;
   }, [language]);
+
+  const timePeriod = useMemo(() => {
+    const now = new Date();
+    const hour = now.getHours();
+    const min = now.getMinutes();
+    const totalMin = hour * 60 + min;
+    if (totalMin >= 360 && totalMin < 900) return "day"; // 06:00 - 15:00
+    if (totalMin >= 900 && totalMin < 1110) return "afternoon"; // 15:00 - 18:30
+    return "night";
+  }, [currentDateTime]);
+
+  const getWeatherCardStyle = () => {
+    if (timePeriod === "day") {
+      return {
+        background: "radial-gradient(178.94% 106.41% at 26.42% 106.41%, #FFF7B1 0%, #FFFFFF 71.88%)",
+        color: "#574D33"
+      };
+    }
+    if (timePeriod === "afternoon") {
+      return {
+        background: "radial-gradient(178.94% 106.41% at 26.42% 106.41%, #FF9A9E 0%, #FAD0C4 99%, #FAD0C4 100%)",
+        color: "#4A2C2C"
+      };
+    }
+    return {
+      background: "radial-gradient(171.8% 103.59% at 26.42% 106.41%, #1e272e 0%, #000000 100%)",
+      color: "#FFFFFF"
+    };
+  };
 
   useEffect(() => {
     setCurrentDateTime(getFormattedDateTime());
@@ -161,7 +272,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Header Section */}
-      <div className="bg-white dark:bg-gray-900 rounded-b-[56px] px-8 pt-14 pb-8 shadow-2xl z-20 relative border-b border-gray-100 dark:border-gray-800 shrink-0">
+      <div className="bg-white dark:bg-gray-900 rounded-b-[56px] px-8 pt-6 pb-16 z-10 relative border-b border-gray-100 dark:border-gray-800 shrink-0">
         <div className="flex justify-between items-start mb-8">
           <div className="animate-in fade-in slide-in-from-left-4 duration-500">
             {isLoading ? (
@@ -198,79 +309,58 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </button>
         </div>
 
-        {/* Status Card: Weather, Wind & Date */}
-        <div className="animate-in zoom-in fade-in duration-700 delay-200">
-          {isLoading ? (
-            <div className="h-28 w-full bg-gray-100 dark:bg-gray-800 rounded-[32px] animate-pulse"></div>
-          ) : (
-            <div className="bg-blue-600 dark:bg-blue-700 rounded-[32px] p-6 text-white shadow-[0_20px_40px_-15px_rgba(37,99,235,0.4)] flex justify-between items-center relative overflow-hidden group">
-              {/* Background decorative element */}
-              <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                <CloudSun size={100} />
-              </div>
+        {/* Status Card: Weather, Wind & Date - Now overlapping */}
+        <div className="absolute top-[50%] left-1/2 -translate-x-1/2 translate-y-10 z-20 w-full max-w-xs sm:max-w-sm">
+          <div className="animate-in zoom-in fade-in duration-700 delay-200">
+            {isLoading ? (
+              <div className="h-[190px] w-full bg-gray-100 dark:bg-gray-800 rounded-[42px] animate-pulse shadow-2xl"></div>
+            ) : (
+              <div
+                className="weather-card shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)]"
+                style={getWeatherCardStyle()}
+              >
+                <WeatherVisual weather={weather} timePeriod={timePeriod} />
 
-              <div className="flex flex-col z-10">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1.5 bg-white/20 rounded-lg">
-                    <Clock size={14} className="text-white" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
-                    {t.currentWeather}
-                  </span>
+                <div className="card-info">
+                  <span className="label !font-black !text-[15px] opacity-60" style={{ color: getWeatherCardStyle().color }}>{currentDateTime}</span>
+                  {weather && (
+                    <div className="flex items-center gap-2 mt-1 opacity-40">
+                      <Wind size={12} strokeWidth={3} style={{ color: getWeatherCardStyle().color }} />
+                      <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: getWeatherCardStyle().color }}>
+                        {Math.round(weather.windspeed || 0)} KM/H
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <span className="text-sm font-black uppercase tracking-tight tabular-nums">
-                  {currentDateTime}
-                </span>
-              </div>
 
-              <div className="flex gap-6 items-center z-10">
-                {weather ? (
-                  <>
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-1.5">
-                        <Thermometer size={18} strokeWidth={3} />
-                        <span className="text-2xl font-black tabular-nums">
-                          {Math.round(weather.temperature)}°
-                        </span>
-                      </div>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-white/60 mt-1">
-                        {t.weather}
-                      </span>
+                <div className="weather-temp" style={{ color: getWeatherCardStyle().color }}>
+                  {weather ? `${Math.round(weather.temperature)}°` : "--°"}
+                </div>
+
+                <div className="weather-stats">
+                  {weather && weather.locationName && (
+                    <div className="stat-chip" style={{ backgroundColor: 'rgba(0,0,0,0.05)', color: getWeatherCardStyle().color }}>
+                      <MapPin size={14} />
+                      <span className="truncate max-w-[150px]">{weather.locationName}</span>
                     </div>
-                    <div className="w-px h-10 bg-white/20"></div>
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-1.5">
-                        <Wind size={18} strokeWidth={3} />
-                        <span className="text-2xl font-black tabular-nums">
-                          {Math.round(weather.windspeed || 0)}
-                        </span>
-                      </div>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-white/60 mt-1">
-                        KM/H
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <RefreshCw size={20} className="animate-spin opacity-50" />
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
-                      Updating
-                    </span>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-8 pt-10 overflow-hidden">
+      <div className="flex-1 flex flex-col p-8 pt-44 overflow-hidden relative z-10">
+        {/* Edge Blur Bottom */}
+        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-gray-50 dark:from-black to-transparent z-10 pointer-events-none" />
+
         {/* Activity Picker */}
         <div className="shrink-0">
-          <h3 className="font-black text-gray-400 dark:text-gray-500 mb-4 uppercase text-[10px] tracking-[0.3em]">
+          <h3 className="font-black text-gray-400 dark:text-gray-500 mb-6 uppercase text-[10px] tracking-[0.3em]">
             {t.chooseActivity}
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-8">
             <button
               onClick={onPrepareRun}
               className="bg-white dark:bg-gray-900 p-6 rounded-[36px] shadow-lg border border-gray-100 dark:border-gray-800 flex flex-col items-center gap-4 active:scale-95 transition-all group animate-in fade-in slide-in-from-bottom-4 duration-500"
@@ -297,7 +387,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* Recent Activity */}
-        <div className="flex-1 flex flex-col mt-8 overflow-hidden">
+        <div className="flex-1 flex flex-col mt-4 overflow-hidden">
           <div className="flex justify-between items-center mb-4 px-1 shrink-0">
             <h3 className="font-black text-gray-400 dark:text-gray-500 uppercase text-[10px] tracking-[0.3em]">
               {t.recentActivity}
@@ -312,13 +402,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           <div
             ref={activityListRef}
-            className="flex-1 flex flex-row gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4"
+            className="flex-1 flex flex-row gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4 edge-blur px-8"
           >
             {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => <SkeletonItem key={i} />)
             ) : runHistory.length === 0 ? (
               <div className="h-32 w-full bg-white dark:bg-gray-900 rounded-[32px] flex flex-col items-center justify-center border border-gray-100 dark:border-gray-800 animate-in fade-in duration-1000 shrink-0">
-                <Activity size={32} className="text-gray-200 mb-3" />
+                <Clock size={32} className="text-gray-200 mb-3" />
                 <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">
                   {t.noRuns}
                 </p>
@@ -347,7 +437,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           {isWorkout ? (
                             <Dumbbell size={20} />
                           ) : (
-                            <Activity size={20} />
+                            <Clock size={20} />
                           )}
                         </div>
                         <div className="overflow-hidden">
@@ -356,7 +446,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           </p>
                           <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tight">
                             {new Date(session.startTime).toLocaleDateString(
-                              undefined,
+                              language === "id" ? "id-ID" : language === "jp" ? "ja-JP" : "en-US",
                               { month: "short", day: "numeric" }
                             )}
                           </p>

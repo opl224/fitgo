@@ -15,14 +15,14 @@ export interface GeoPoint {
 
 export interface RunSession {
   id: string;
-  type: string; 
+  type: string;
   startTime: number;
   endTime?: number;
   duration: number;
   distance: number;
   path: GeoPoint[];
   calories: number;
-  avgPace: string; 
+  avgPace: string;
 }
 
 export interface UserPhysicalProfile {
@@ -47,13 +47,13 @@ export interface WorkoutSession {
 }
 
 export interface ActiveSession {
-    type: string;
-    elapsedTime: number;
-    distance: number;
-    path: GeoPoint[];
-    targetPace: number | null;
-    selectedPresetName: string | null;
-    isPaused: boolean;
+  type: string;
+  elapsedTime: number;
+  distance: number;
+  path: GeoPoint[];
+  targetPace: number | null;
+  selectedPresetName: string | null;
+  isPaused: boolean;
 }
 
 export type Language = 'en' | 'id' | 'jp';
@@ -69,10 +69,10 @@ export interface PaceZone {
 }
 
 export interface AudioCuesSettings {
-    enabled: boolean;
-    paceAlerts: boolean;
-    distanceMilestones: boolean;
-    alertFrequency: number;
+  enabled: boolean;
+  paceAlerts: boolean;
+  distanceMilestones: boolean;
+  alertFrequency: number;
 }
 
 export interface WorkoutPreset {
@@ -87,8 +87,9 @@ export interface WeatherData {
   weathercode: number;
   windspeed?: number;
   humidity?: number;
+  locationName?: string;
   hourly?: {
-      temperature_2m: number[];
-      weathercode: number[];
+    temperature_2m: number[];
+    weathercode: number[];
   }
 }

@@ -13,13 +13,20 @@ export const TermsScreen: React.FC<TermsScreenProps> = ({ onBack, t }) => {
       <div className="p-6 pt-12 flex items-center bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 z-20 rounded-b-[64px] shadow-xl pb-12 transition-all">
         <button
           onClick={onBack}
-          className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all"
+          className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all z-10"
         >
           <ArrowLeft size={24} />
         </button>
-        <span className="mx-auto font-black text-xl text-gray-800 dark:text-white uppercase tracking-[0.2em]">
-          {t.termsConditions}
-        </span>
+        <div className="absolute inset-x-0 flex justify-center pointer-events-none">
+          <h1 className="font-black text-xl text-gray-800 dark:text-white uppercase tracking-[0.2em] text-center leading-tight">
+            {t.termsConditions.split('&').map((part: string, i: number) => (
+              <React.Fragment key={i}>
+                {part.trim()}
+                {i === 0 && <><br />&</>}
+              </React.Fragment>
+            ))}
+          </h1>
+        </div>
         <div className="w-12"></div>
       </div>
 
@@ -74,26 +81,6 @@ export const TermsScreen: React.FC<TermsScreenProps> = ({ onBack, t }) => {
             </p>
           </div>
         </section>
-
-        <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-[32px] border border-gray-100 dark:border-gray-800 space-y-3">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600">
-              <Mail size={20} />
-            </div>
-            <h4 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">
-              {t.termsQuestionsIssues}
-            </h4>
-          </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium leading-relaxed">
-            {t.termsContactDesc}
-          </p>
-          <a
-            href="mailto:siapaajaboleh202@gmail.com"
-            className="inline-block text-base font-black text-blue-600 dark:text-blue-400 border-b-2 border-blue-600/20 pb-1"
-          >
-            siapaajaboleh202@gmail.com
-          </a>
-        </div>
 
         <div className="pt-8 flex items-center justify-center gap-3 opacity-30 pb-12">
           <Copyright size={16} />

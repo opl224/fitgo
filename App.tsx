@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import { Geolocation } from "@capacitor/geolocation";
 import { App as CapacitorApp } from "@capacitor/app";
-import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import { Share as CapacitorShare } from "@capacitor/share";
 import {
   Screen,
@@ -162,8 +162,47 @@ class ErrorBoundary extends React.Component<
 }
 
 const App: React.FC = () => {
+  // --- Initialization Logic (Force Onboarding on Fresh Install) ---
+  // We use a flag with a version to handle future migrations if needed
+  const INIT_FLAG = "FITGO_INITIALIZED_V1";
+
+  useEffect(() => {
+    // Request permissions on startup
+    const requestInitialPermissions = async () => {
+      try {
+        const platform = (window as any).Capacitor?.getPlatform() || "web";
+        if (platform !== "web") {
+          // Request Geolocation Permissions
+          await Geolocation.requestPermissions();
+
+          // Request Filesystem Permissions (specifically for saving/sharing backups)
+          try {
+            await Filesystem.requestPermissions();
+          } catch (fsErr) {
+            console.warn("Filesystem permission request not supported or failed", fsErr);
+          }
+        }
+      } catch (e) {
+        console.warn("Permission request failed on startup", e);
+      }
+    };
+    requestInitialPermissions();
+
+    // Ensure the flag is set if it wasn't already (initializers handle the clearing)
+    if (!localStorage.getItem(INIT_FLAG)) {
+      localStorage.setItem(INIT_FLAG, "true");
+    }
+  }, []);
+
   // --- Persistent State ---
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => {
+    const isInitialized = localStorage.getItem(INIT_FLAG);
+    if (!isInitialized) {
+      // Synchronously clear data on first run of this version/install
+      localStorage.clear();
+      // We don't set the flag here yet to allow other initializers to detect the fresh state
+      return "onboarding";
+    }
     const hasSeen = localStorage.getItem("hasOnboarded");
     return hasSeen === "true" ? "dashboard" : "onboarding";
   });
@@ -176,6 +215,8 @@ const App: React.FC = () => {
   );
   const [runHistory, setRunHistory] = useState<RunSession[]>(() => {
     try {
+      const isInitialized = localStorage.getItem(INIT_FLAG);
+      if (!isInitialized) return []; // Fresh start
       return JSON.parse(localStorage.getItem("runHistory") || "[]");
     } catch {
       return [];
@@ -266,19 +307,38 @@ const App: React.FC = () => {
       if (isWeatherLoading) return;
       setIsWeatherLoading(true);
       try {
-        const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-        );
-        const data = await response.json();
-        if (data && data.current_weather) {
+        const [weatherRes, geoRes] = await Promise.all([
+          fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+          ),
+          fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+            { headers: { "Accept-Language": language } }
+          ),
+        ]);
+
+        const weatherData = await weatherRes.json();
+        const geoData = await geoRes.json();
+
+        if (weatherData && weatherData.current_weather) {
+          const address = geoData.address || {};
+          const cityName =
+            address.city ||
+            address.town ||
+            address.village ||
+            address.suburb ||
+            address.county ||
+            "Unknown Location";
+
           setWeather({
-            temperature: data.current_weather.temperature,
-            weathercode: data.current_weather.weathercode,
-            windspeed: data.current_weather.windspeed,
+            temperature: weatherData.current_weather.temperature,
+            weathercode: weatherData.current_weather.weathercode,
+            windspeed: weatherData.current_weather.windspeed,
+            locationName: cityName,
           });
         }
       } catch (error) {
-        console.error("Gagal mengambil data cuaca:", error);
+        console.error("Gagal mengambil data cuaca atau lokasi:", error);
       } finally {
         setIsWeatherLoading(false);
       }
@@ -433,54 +493,58 @@ const App: React.FC = () => {
         appVersion: "1.0.1",
       };
 
-      const json = JSON.stringify(backupData, null, 2);
+      const jsonString = JSON.stringify(backupData, null, 2);
+      const filename = `fitgo-backup-${new Date().toISOString().split("T")[0]}.json`;
 
-      // Try Capacitor Filesystem + Share to save/send file on native
-      try {
-        const filename = `fitgo-backup-${new Date().toISOString().split("T")[0]
-          }.json`;
-        const saved = await Filesystem.writeFile({
-          path: filename,
-          data: json,
-          directory: Directory.Documents,
-        });
-        const fileUri = (saved as any).uri || (saved as any).path;
-        if (fileUri) {
-          try {
-            await CapacitorShare.share({
-              title: "Fit Go Backup",
-              text: "Backup file",
-              url: fileUri,
-            });
-            triggerHaptic(100);
-            setExportDialogMsg(t.exportSuccess || "Backup saved");
-            setExportDialogType("success");
-            setExportDialogOpen(true);
-            return;
-          } catch (shareErr) {
-            console.debug("Share failed, fallback to download", shareErr);
-          }
+      const platform = (window as any).Capacitor?.getPlatform() || "web";
+
+      if (platform !== "web") {
+        try {
+          // Revert to Capacitor Share using Cache for maximum reliability
+          const result = await Filesystem.writeFile({
+            path: filename,
+            data: jsonString,
+            directory: Directory.Cache,
+            encoding: Encoding.UTF8,
+          });
+
+          await CapacitorShare.share({
+            title: "Fit Go Backup",
+            text: "My FitGo activity backup",
+            url: result.uri,
+            dialogTitle: "Share Backup File",
+          });
+
+          triggerHaptic(100);
+          setExportDialogMsg(t.exportSuccess || "Cadangan berhasil dibuat");
+          setExportDialogType("success");
+          setExportDialogOpen(true);
+          return;
+        } catch (nativeErr: any) {
+          console.error("Native export failed:", nativeErr);
+          setExportDialogMsg(t.exportError || "Gagal mengekspor cadangan.");
+          setExportDialogType("danger");
+          setExportDialogOpen(true);
+          return;
         }
-      } catch (fsErr) {
-        console.debug("Filesystem write failed, fallback to download", fsErr);
       }
 
-      // Fallback to browser download
-      const blob = new Blob([json], { type: "application/json" });
+      // Browser download fallback (web only)
+      const blob = new Blob([jsonString], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `fitgo-backup-${new Date().toISOString().split("T")[0]
-        }.json`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
       triggerHaptic(100);
-      setExportDialogMsg(t.exportSuccess || "Backup saved");
+      setExportDialogMsg(t.exportSuccess || "Cadangan disimpan ke folder Unduhan");
       setExportDialogType("success");
       setExportDialogOpen(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Export failed:", error);
       setExportDialogMsg(t.exportError || "Gagal mengekspor data.");
       setExportDialogType("danger");
@@ -500,7 +564,8 @@ const App: React.FC = () => {
 
         if (importedData.userName) setUserName(importedData.userName);
         if (importedData.runHistory) setRunHistory(importedData.runHistory);
-        if (importedData.language) setLanguage(importedData.language);
+        // Do not auto-switch language on import to respect current app setting
+        // if (importedData.language) setLanguage(importedData.language);
         if (importedData.unitSystem) setUnitSystem(importedData.unitSystem);
         if (importedData.profilePhoto)
           setProfilePhoto(importedData.profilePhoto);
@@ -511,7 +576,7 @@ const App: React.FC = () => {
           "runHistory",
           JSON.stringify(importedData.runHistory)
         );
-        localStorage.setItem("language", importedData.language || language);
+        // localStorage.setItem("language", importedData.language || language);
         localStorage.setItem(
           "unitSystem",
           importedData.unitSystem || unitSystem
@@ -748,9 +813,16 @@ const App: React.FC = () => {
             setSelectedRunType={() => { }}
             setSelectedPresetName={() => { }}
             setTargetPace={() => { }}
-            getTranslatedRunType={(type) =>
-              t[type.toLowerCase().replace(/\s/g, "")] || type
-            }
+            getTranslatedRunType={(type) => {
+              const key = type.toLowerCase().replace(/\s/g, "");
+              // Check for exact match first, then camelCase variants, then common exercise prefix
+              // Common keys: outdoorRun, training, exPushups, exSitups, etc.
+              const camelKey = key.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+                index === 0 ? word.toLowerCase() : word.toUpperCase()
+              ).replace(/\s+/g, '');
+
+              return t[key] || t[camelKey] || t[`ex${key.charAt(0).toUpperCase() + key.slice(1)}`] || t[`ex${key}`] || t.outdoorRun || type;
+            }}
             isLoading={isWeatherLoading}
             onRefresh={handleRefresh}
             // Update Props
@@ -1051,6 +1123,7 @@ const App: React.FC = () => {
             onBack={handleBackRequest}
             runHistory={runHistory}
             unitSystem={unitSystem}
+            language={language}
             t={t}
             onHistorySelect={(s) => {
               setSelectedSession(s);
@@ -1064,9 +1137,13 @@ const App: React.FC = () => {
             }}
             onExportData={handleExportData}
             onImportData={handleImportData}
-            getTranslatedRunType={(type) =>
-              t[type.toLowerCase().replace(/\s/g, "")] || type
-            }
+            getTranslatedRunType={(type) => {
+              const key = type.toLowerCase().replace(/\s/g, "");
+              const camelKey = key.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+                index === 0 ? word.toLowerCase() : word.toUpperCase()
+              ).replace(/\s+/g, '');
+              return t[key] || t[camelKey] || t[`ex${key.charAt(0).toUpperCase() + key.slice(1)}`] || t[`ex${key}`] || t.outdoorRun || type;
+            }}
           />
         )}
 
@@ -1123,7 +1200,7 @@ const App: React.FC = () => {
           isOpen={isExportDialogOpen}
           onClose={() => setExportDialogOpen(false)}
           onConfirm={() => setExportDialogOpen(false)}
-          title={exportDialogType === "success" ? t.success || "Berhasil" : t.error || "Error"}
+          title={exportDialogType === "success" ? t.success : t.error}
           message={exportDialogMsg}
           confirmText="OK"
           cancelText=""
@@ -1134,7 +1211,7 @@ const App: React.FC = () => {
           isOpen={isImportDialogOpen}
           onClose={() => setImportDialogOpen(false)}
           onConfirm={() => setImportDialogOpen(false)}
-          title={importDialogType === "success" ? t.success || "Berhasil" : t.error || "Error"}
+          title={importDialogType === "success" ? t.success : t.error}
           message={importDialogMsg}
           confirmText="OK"
           cancelText=""
@@ -1143,9 +1220,9 @@ const App: React.FC = () => {
 
         {/* Exit Toast */}
         {showExitToast && (
-          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] animate-in slide-in-from-bottom-4 duration-300">
-            <div className="bg-gray-900 dark:bg-gray-800 text-white px-6 py-4 rounded-2xl shadow-2xl border border-gray-700">
-              <p className="text-sm font-black uppercase tracking-widest">
+          <div className="fixed bottom-20 inset-x-0 mx-auto z-[9999] w-fit animate-in slide-in-from-bottom-4 duration-300">
+            <div className="bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-md text-white px-6 py-3 rounded-2xl shadow-2xl border border-white/10">
+              <p className="text-sm font-medium uppercase tracking-widest text-center">
                 {t.pressAgainToExit || "Tekan lagi untuk keluar"}
               </p>
             </div>

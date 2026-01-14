@@ -1,0 +1,345 @@
+/* Modern Weather Card Styles */
+.weather-card {
+  width: 100%;
+  max-width: 400px;
+  min-height: 190px;
+  position: relative;
+  padding: 24px;
+  border-radius: 42px;
+  transition: all 1.2s cubic-bezier(0.15, 0.83, 0.66, 1);
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .weather-card {
+  background: radial-gradient(178.94% 106.41% at 26.42% 106.41%, #2d3748 0%, rgba(0, 0, 0, 0) 71.88%), #1a202c;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.weather-card:hover {
+  transform: scale(1.02);
+}
+
+.weather-visual-container {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.5);
+  pointer-events: none;
+}
+
+.cloud-group {
+  width: 250px;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.08));
+}
+
+.cloud-front {
+  padding-top: 50px;
+  margin-left: 30px;
+  display: inline;
+  position: absolute;
+  z-index: 11;
+  animation: clouds-drift 8s infinite ease-in-out;
+}
+
+.cloud-back {
+  margin-top: -35px;
+  margin-left: 100px;
+  z-index: 10;
+  animation: clouds-drift 12s infinite ease-in-out;
+  opacity: 0.7;
+}
+
+.cloud-part {
+  background-color: var(--cloud-color, #ffffff);
+  display: inline-block;
+  z-index: 5;
+  position: relative;
+}
+
+.dark .cloud-part {
+  background-color: var(--cloud-color, #4a5568);
+}
+
+.right-front {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  margin-left: -35px;
+}
+
+.left-front {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+}
+
+.cloud-front::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 100px;
+  height: 40px;
+  background-color: var(--cloud-color, #ffffff);
+  border-radius: 50px;
+  z-index: 4;
+}
+
+.dark .cloud-front::after,
+.dark .cloud-back::after {
+  background-color: var(--cloud-color, #4a5568);
+}
+
+.right-back {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-left: -30px;
+}
+
+.left-back {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.cloud-back::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  width: 80px;
+  height: 30px;
+  background-color: var(--cloud-color, #ffffff);
+  border-radius: 40px;
+  z-index: 4;
+}
+
+.sun-core {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(to right, #fcbb04, #fffc00);
+  border-radius: 50%;
+  display: inline;
+  position: absolute;
+}
+
+.sun-glow {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #fffc00 0%, transparent 70%);
+  border-radius: 50%;
+  animation: sun-pulse 2s infinite;
+}
+
+@keyframes sun-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Sunset Sun */
+.sun-sunset-core {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(to bottom, #ff5f6d, #ffc371);
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 0 60px rgba(255, 95, 109, 0.4);
+}
+
+/* Moon Styles */
+.moon-visual {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  box-shadow: inset -15px 5px 0 0 #f0f0f0;
+  position: absolute;
+  transform: rotate(-15deg);
+  background: transparent;
+}
+
+.moon-glow {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: moon-pulse 4s infinite ease-in-out;
+}
+
+@keyframes moon-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+}
+
+/* Stars */
+.star-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--duration) infinite ease-in-out;
+}
+
+@keyframes twinkle {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes clouds-drift {
+
+  0%,
+  100% {
+    transform: translateX(15px);
+  }
+
+  50% {
+    transform: translateX(0px);
+  }
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 20;
+}
+
+.card-info .label {
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 135%;
+  color: rgba(87, 77, 51, 0.66);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.dark .card-info .label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.card-info .sub-label {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 135%;
+  color: rgba(87, 77, 51, 0.33);
+}
+
+.dark .card-info .sub-label {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.weather-temp {
+  position: absolute;
+  left: 20px;
+  bottom: 0px;
+  font-weight: 900;
+  font-size: 56px;
+  line-height: 1;
+  color: rgba(87, 77, 51, 1);
+  letter-spacing: -0.05em;
+}
+
+.dark .weather-temp {
+  color: #FFFFFF;
+}
+
+.weather-stats {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-chip {
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  color: rgba(87, 77, 51, 0.66);
+}
+
+.dark .stat-chip {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Rain Animations */
+.rain-drops {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.drop {
+  position: absolute;
+  background: #4c9beb;
+  width: 2px;
+  height: 10px;
+  border-radius: 1px;
+  animation: rain-fall 1s linear infinite;
+}
+
+@keyframes rain-fall {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(150px);
+    opacity: 0;
+  }
+}

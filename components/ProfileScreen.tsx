@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import {
   ArrowLeft,
-  Camera as CameraIcon,
   User,
   Check,
   Moon,
@@ -21,6 +20,7 @@ import {
   Milestone,
   Timer,
   Info,
+  X,
 } from "lucide-react";
 import { Language, UnitSystem, AudioCuesSettings, PaceZone } from "../types";
 
@@ -88,12 +88,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [editNameValue, setEditNameValue] = useState(userName);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [isNameFocused, setIsNameFocused] = useState(false);
+
   const saveProfile = () => {
     const finalName = editNameValue.trim().slice(0, 9);
     if (finalName) {
       setUserName(finalName);
       localStorage.setItem("userName", finalName);
       setEditNameValue(finalName);
+      setIsNameFocused(false);
     }
   };
 
@@ -135,7 +138,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
       <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar pb-24 -mt-4 transition-all z-10">
         <div className="flex flex-col items-center">
-          <div className="relative group">
+          <div className="relative group cursor-pointer active:scale-95 transition-transform" onClick={() => fileInputRef.current?.click()}>
             <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border-4 border-white dark:border-gray-700 shadow-xl">
               {profilePhoto ? (
                 <img
@@ -152,12 +155,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 </div>
               )}
             </div>
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 p-2.5 bg-blue-600 text-white rounded-full shadow-lg border-2 border-white dark:border-gray-900"
-            >
-              <CameraIcon size={18} />
-            </button>
             <input
               type="file"
               ref={fileInputRef}
@@ -177,16 +174,19 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <input
                 value={editNameValue}
                 onChange={(e) => setEditNameValue(e.target.value)}
+                onFocus={() => setIsNameFocused(true)}
                 maxLength={9}
-                className="flex-1 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 dark:text-white focus:ring-2 ring-blue-500 shadow-sm"
+                className="flex-1 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 dark:text-white focus:ring-2 ring-blue-500 shadow-sm transition-all"
                 placeholder={t.namePlaceholder}
               />
-              <button
-                onClick={saveProfile}
-                className="bg-blue-600 text-white p-4 rounded-2xl shadow-lg active:scale-95 transition-all"
-              >
-                <Check size={20} />
-              </button>
+              {(isNameFocused || editNameValue !== userName) && (
+                <button
+                  onClick={saveProfile}
+                  className="bg-blue-600 text-white p-4 rounded-2xl shadow-lg active:scale-95 transition-all animate-in zoom-in fade-in duration-300"
+                >
+                  <Check size={20} />
+                </button>
+              )}
             </div>
           </div>
 
@@ -391,7 +391,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 </div>
                 <div className="flex flex-col items-start">
                   <span className="font-bold dark:text-white">
-                    App Version
+                    {t.appVersion || "App Version"}
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-wider">

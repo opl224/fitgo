@@ -6,12 +6,14 @@ const config: CapacitorConfig = {
   webDir: "dist",
   plugins: {
     SplashScreen: {
-      launchShowDuration: 3000, // tampil 3 detik
-      launchAutoHide: true, // otomatis sembunyi
-      backgroundColor: "#ffffff", // warna latar
-      androidSplashResourceName: "splash", // nama file splash di drawable
-      androidScaleType: "CENTER_CROP",
-      showSpinner: false, // tidak pakai loading spinner
+      launchShowDuration: 3000,
+      launchAutoHide: true,
+      backgroundColor: "#ffffff",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER",
+      showSpinner: false,
+      splashFullScreen: false,
+      splashImmersive: false,
     },
   },
 };

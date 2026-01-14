@@ -30,6 +30,7 @@ interface HistoryScreenProps {
   onExportData: () => void;
   onImportData: (file: File) => void;
   getTranslatedRunType: (type: string) => string;
+  language: string;
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -43,6 +44,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
   onDeleteSession,
   onExportData,
   onImportData,
+  getTranslatedRunType,
+  language,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
@@ -93,10 +96,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
   }, [filteredHistory, currentPage]);
 
   const translateType = (type: string) => {
-    const key = type.toLowerCase().replace(/\s/g, "");
-    if (t[key]) return t[key];
-    if (type === "Outdoor Run") return t.outdoorRun || type;
-    return type;
+    return getTranslatedRunType(type);
   };
 
   const handleDeleteRequest = (e: React.MouseEvent, id: string) => {
@@ -155,6 +155,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
 
   return (
     <div className="h-screen w-screen bg-gray-50 dark:bg-black flex flex-col transition-colors duration-300">
+
       {/* Header - Android Style (Large) */}
       <div className="p-6 pt-12 flex flex-col bg-white dark:bg-gray-900 shadow-xl z-20 border-b border-gray-100 dark:border-gray-800 rounded-b-[64px] pb-8 transition-all">
         <div className="flex items-center mb-6">
@@ -172,43 +173,47 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
 
         {/* Filter Controls Bar */}
         <div className="flex flex-col gap-4 px-2">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-            <button
-              onClick={() => {
-                setFilterType("all");
-                setCurrentPage(1);
-              }}
-              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${filterType === "all"
+          <div className="relative">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1" style={{ maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}>
+              <div className="w-12 flex-shrink-0" />
+              <button
+                onClick={() => {
+                  setFilterType("all");
+                  setCurrentPage(1);
+                }}
+                className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${filterType === "all"
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
-                }`}
-            >
-              {t.allExercises || "All"}
-            </button>
-            <button
-              onClick={() => {
-                setFilterType("run");
-                setCurrentPage(1);
-              }}
-              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${filterType === "run"
+                  }`}
+              >
+                {t.allExercises || "All"}
+              </button>
+              <button
+                onClick={() => {
+                  setFilterType("run");
+                  setCurrentPage(1);
+                }}
+                className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${filterType === "run"
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
-                }`}
-            >
-              <Activity size={14} /> {t.outdoorRun}
-            </button>
-            <button
-              onClick={() => {
-                setFilterType("workout");
-                setCurrentPage(1);
-              }}
-              className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${filterType === "workout"
-                  ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30"
+                  }`}
+              >
+                <MapPin size={14} /> {t.outdoorRun}
+              </button>
+              <button
+                onClick={() => {
+                  setFilterType("workout");
+                  setCurrentPage(1);
+                }}
+                className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${filterType === "workout"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
-                }`}
-            >
-              <Dumbbell size={14} /> {t.training}
-            </button>
+                  }`}
+              >
+                <Dumbbell size={14} /> {t.training || 'Training'}
+              </button>
+              <div className="w-12 flex-shrink-0" />
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -242,7 +247,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
 
       <div
         id="history-scroll-container"
-        className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar pb-32 -mt-4 z-10 pt-10"
+        className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar pb-32 -mt-4 z-10 pt-10 edge-blur-v"
       >
         {/* Backup/Restore Card - Keep for utility */}
         <div className="bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-[40px] p-8 border border-gray-100 dark:border-gray-800 shadow-sm animate-in fade-in duration-500">
@@ -263,23 +268,23 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
             <button
               onClick={onExportData}
               disabled={runHistory.length === 0}
-              className={`flex items-center justify-center gap-3 py-4 rounded-2xl transition-all group ${runHistory.length === 0
-                  ? "bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed"
-                  : "bg-gray-50 dark:bg-gray-700/50 active:scale-95"
+              className={`flex flex-col items-center justify-center gap-2 py-5 rounded-2xl transition-all group ${runHistory.length === 0
+                ? "bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed"
+                : "bg-gray-50 dark:bg-gray-700/50 active:scale-95"
                 }`}
             >
-              <Download size={18} className={runHistory.length === 0 ? "text-gray-400" : "text-blue-600"} />
-              <span className={`text-[11px] font-black uppercase tracking-widest ${runHistory.length === 0 ? "text-gray-400" : "text-gray-700 dark:text-gray-200"
+              <Download size={22} className={runHistory.length === 0 ? "text-gray-400" : "text-blue-600"} />
+              <span className={`text-[10px] font-black uppercase tracking-widest ${runHistory.length === 0 ? "text-gray-400" : "text-gray-700 dark:text-gray-200"
                 }`}>
                 {t.exportData}
               </span>
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center justify-center gap-3 bg-gray-50 dark:bg-gray-700/50 py-4 rounded-2xl active:scale-95 transition-all group"
+              className="flex flex-col items-center justify-center gap-2 bg-gray-50 dark:bg-gray-700/50 py-5 rounded-2xl active:scale-95 transition-all group"
             >
-              <Upload size={18} className="text-purple-600" />
-              <span className="text-[11px] font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">
+              <Upload size={22} className="text-purple-600" />
+              <span className="text-[10px] font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">
                 {t.importData}
               </span>
             </button>
@@ -306,16 +311,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
             </div>
             <div className="text-center">
               <p className="font-black uppercase tracking-[0.3em] text-sm opacity-40">
-                {t.noRuns}
+                {filterType === 'workout' ? t.noTrainingRecordYet : t.noHistoryTitle}
               </p>
-              {(filterType !== "all" || filterDate) && (
-                <button
-                  onClick={clearFilters}
-                  className="mt-4 text-blue-600 font-black uppercase text-[10px] tracking-widest"
-                >
-                  {t.clearFilters || "Clear Filters"}
-                </button>
-              )}
             </div>
           </div>
         ) : (
@@ -341,22 +338,22 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                     key={session.id}
                     onClick={() => onHistorySelect(session)}
                     className={`bg-white dark:bg-gray-900 rounded-[48px] p-8 shadow-sm border border-gray-100 dark:border-gray-800 active:scale-[0.98] transition-all cursor-pointer group hover:border-blue-500/30 relative overflow-hidden ${isDeleting
-                        ? "opacity-0 scale-95"
-                        : "opacity-100 scale-100"
+                      ? "opacity-0 scale-95"
+                      : "opacity-100 scale-100"
                       }`}
                   >
                     <div className="flex justify-between items-start mb-8">
                       <div className="flex items-center gap-5">
                         <div
                           className={`w-14 h-14 ${isWorkout
-                              ? "bg-orange-50 dark:bg-orange-950 text-orange-500"
-                              : "bg-blue-50 dark:bg-blue-950 text-blue-600"
+                            ? "bg-orange-50 dark:bg-orange-950 text-orange-500"
+                            : "bg-blue-50 dark:bg-blue-950 text-blue-600"
                             } rounded-[24px] flex items-center justify-center shadow-inner`}
                         >
                           {isWorkout ? (
                             <Dumbbell size={28} />
                           ) : (
-                            <Activity size={28} />
+                            <MapPin size={28} />
                           )}
                         </div>
                         <div>
@@ -366,17 +363,23 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                           <div className="flex items-center gap-2 mt-1">
                             <Calendar size={12} className="text-gray-400" />
                             <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
-                              {date.toLocaleDateString(undefined, {
-                                weekday: "short",
-                                month: "short",
-                                day: "numeric",
-                              })}{" "}
+                              {date.toLocaleDateString(
+                                language === "id" ? "id-ID" : language === "jp" ? "ja-JP" : "en-US",
+                                {
+                                  weekday: "short",
+                                  month: "short",
+                                  day: "numeric",
+                                }
+                              )}{" "}
                               •{" "}
-                              {date.toLocaleTimeString(undefined, {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              })}
+                              {date.toLocaleTimeString(
+                                language === "id" ? "id-ID" : language === "jp" ? "ja-JP" : "en-US",
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: false,
+                                }
+                              )}
                             </p>
                           </div>
                         </div>
@@ -397,8 +400,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                         <div className="flex items-baseline gap-0.5">
                           <span
                             className={`text-2xl font-black tabular-nums tracking-tighter ${isWorkout
-                                ? "text-orange-500"
-                                : "text-gray-900 dark:text-white"
+                              ? "text-orange-500"
+                              : "text-gray-900 dark:text-white"
                               }`}
                           >
                             {displayDistance.value}
@@ -450,8 +453,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                   className={`p-5 rounded-[24px] transition-all active:scale-90 ${currentPage === 1
-                      ? "text-gray-200 dark:text-gray-800"
-                      : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
+                    ? "text-gray-200 dark:text-gray-800"
+                    : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
                     }`}
                 >
                   <ChevronLeft size={24} />
@@ -475,8 +478,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   className={`p-5 rounded-[24px] transition-all active:scale-90 ${currentPage === totalPages
-                      ? "text-gray-200 dark:text-gray-800"
-                      : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
+                    ? "text-gray-200 dark:text-gray-800"
+                    : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
                     }`}
                 >
                   <ChevronRight size={24} />

@@ -1,41 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2563eb">
     <title>Fit Go</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3144/3144837.png">
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            animation: {
-              'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
-              'spin-slow': 'spin 3s linear infinite',
-              'bounce-subtle': 'bounce-subtle 2s infinite ease-in-out',
-            },
-            keyframes: {
-              'bounce-subtle': {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-5px)' },
-              }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                        'bounce-subtle': 'bounce-subtle 2s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        'bounce-subtle': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -46,8 +48,9 @@
             --sal: env(safe-area-inset-left);
             --sar: env(safe-area-inset-right);
         }
-        
-        html, body {
+
+        html,
+        body {
             height: 100%;
             width: 100%;
             margin: 0;
@@ -75,55 +78,99 @@
         }
 
         /* Utility: Hide Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         /* Smooth transition for theme switching */
         * {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
         }
-        
+
         /* Leaflet adjustment */
-        .leaflet-container { 
-            z-index: 0; 
-            background: #e5e7eb; 
+        .leaflet-container {
+            z-index: 0;
+            background: #e5e7eb;
             height: 100% !important;
             width: 100% !important;
         }
-        
+
         .dark .leaflet-container {
             background: #111827;
         }
 
         /* Custom Animations */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideInFromBottom {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes slideInFromRight {
-            from { transform: translateX(30px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @keyframes slideInFromLeft {
-            from { transform: translateX(-30px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(-30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @keyframes zoomIn {
-            from { transform: scale(0.92); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from {
+                transform: scale(0.92);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
         }
 
         .animate-in {
@@ -132,25 +179,73 @@
             animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .fade-in { animation-name: fadeIn; }
-        .slide-in-from-bottom-4 { animation-name: slideInFromBottom; }
-        .slide-in-from-right-4 { animation-name: slideInFromRight; }
-        .slide-in-from-left-4 { animation-name: slideInFromLeft; }
-        .zoom-in { animation-name: zoomIn; }
-        .slide-up { animation-name: slideUp; }
+        .fade-in {
+            animation-name: fadeIn;
+        }
 
-        .delay-75 { animation-delay: 75ms; }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-150 { animation-delay: 150ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-        .delay-500 { animation-delay: 500ms; }
-        .delay-700 { animation-delay: 700ms; }
+        .slide-in-from-bottom-4 {
+            animation-name: slideInFromBottom;
+        }
 
-        .duration-300 { animation-duration: 300ms; }
-        .duration-500 { animation-duration: 500ms; }
-        .duration-700 { animation-duration: 700ms; }
-        .duration-1000 { animation-duration: 1000ms; }
+        .slide-in-from-right-4 {
+            animation-name: slideInFromRight;
+        }
+
+        .slide-in-from-left-4 {
+            animation-name: slideInFromLeft;
+        }
+
+        .zoom-in {
+            animation-name: zoomIn;
+        }
+
+        .slide-up {
+            animation-name: slideUp;
+        }
+
+        .delay-75 {
+            animation-delay: 75ms;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .delay-150 {
+            animation-delay: 150ms;
+        }
+
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .delay-500 {
+            animation-delay: 500ms;
+        }
+
+        .delay-700 {
+            animation-delay: 700ms;
+        }
+
+        .duration-300 {
+            animation-duration: 300ms;
+        }
+
+        .duration-500 {
+            animation-duration: 500ms;
+        }
+
+        .duration-700 {
+            animation-duration: 700ms;
+        }
+
+        .duration-1000 {
+            animation-duration: 1000ms;
+        }
 
         /* Custom location marker style */
         .custom-location-marker {
@@ -182,7 +277,8 @@
         }
 
         /* Map controls positioning */
-        .leaflet-top, .leaflet-bottom {
+        .leaflet-top,
+        .leaflet-bottom {
             z-index: 10 !important;
         }
 
@@ -191,8 +287,19 @@
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
         }
+
+        /* Edge Blur Scroll effect */
+        .edge-blur {
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .edge-blur-v {
+            mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+        }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "lucide-react": "https://esm.sh/lucide-react@^0.456.0",
@@ -209,10 +316,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/index.css">
 </head>
+
 <body class="antialiased overflow-hidden">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>

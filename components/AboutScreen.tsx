@@ -8,7 +8,9 @@ import {
   Copyright,
   Mail,
   ChevronRight,
+  User,
 } from "lucide-react";
+import ProfileCard from "./ProfileCard";
 
 interface AboutScreenProps {
   onBack: () => void;
@@ -21,6 +23,22 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({
   onOpenTerms,
   t,
 }) => {
+  const [showProfileCard, setShowProfileCard] = React.useState(false);
+
+  React.useEffect(() => {
+    if (showProfileCard) {
+      window.history.pushState({ profileCard: true }, "");
+      const handlePopState = () => setShowProfileCard(false);
+      window.addEventListener("popstate", handlePopState);
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+        if (window.history.state?.profileCard) {
+          window.history.back();
+        }
+      };
+    }
+  }, [showProfileCard]);
+
   return (
     <div className="h-screen w-screen bg-white dark:bg-black flex flex-col transition-colors duration-300 overflow-hidden">
       {/* Header */}
@@ -34,7 +52,12 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({
         <span className="mx-auto font-black text-xl text-gray-800 dark:text-white uppercase tracking-[0.2em]">
           {t.about}
         </span>
-        <div className="w-12"></div>
+        <button
+          onClick={() => setShowProfileCard(true)}
+          className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-2xl text-blue-600 dark:text-blue-400 active:scale-90 transition-all"
+        >
+          <User size={24} />
+        </button>
       </div>
 
       {/* Content */}
@@ -134,7 +157,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({
         <div className="pt-8 flex flex-col items-center justify-center gap-2 opacity-30 pb-12">
           <div className="flex items-center gap-2">
             <Copyright size={14} />
-            <span className="text-[11px] font-black uppercase tracking-widest">
+            <span className="text-sm font-black uppercase tracking-[0.2em]">
               2026 FIT GO
             </span>
           </div>
@@ -143,6 +166,33 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({
           </p>
         </div>
       </div>
+
+      {/* Profile Card Overlay */}
+      {showProfileCard && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center animate-in fade-in duration-300">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-[24px]"
+            onClick={() => setShowProfileCard(false)}
+          />
+          <div className="relative z-10 w-full max-w-sm flex items-center justify-center animate-in zoom-in slide-in-from-bottom-8 duration-500">
+            <ProfileCard
+              name="Opal"
+              title="dev pemula"
+              handle="opanl"
+              status="Online"
+              contactText="Contact Me"
+              avatarUrl="/me.png"
+              showUserInfo={true}
+              enableTilt={true}
+              enableMobileTilt={false}
+              onContactClick={() => {
+                console.log('Contact clicked');
+                setShowProfileCard(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

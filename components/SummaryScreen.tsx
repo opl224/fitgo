@@ -68,7 +68,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
     };
   }, []);
 
-  const isWorkout = !session.path || session.path.length === 0;
+  const isWorkout = session.type !== "Outdoor Run";
 
   const elevationGain = useMemo(() => {
     if (isWorkout) return 0;
@@ -93,12 +93,23 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
     : getPaceDisplay(paceSecondsPerKm, unitSystem);
   const altitudeDisplay = getAltitudeDisplay(elevationGain, unitSystem);
 
-  const dateStr = new Date(session.startTime).toLocaleDateString(undefined, {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const translateType = (type: string) => {
+    const key = type.toLowerCase().replace(/\s/g, "");
+    const camelKey = key.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+      index === 0 ? word.toLowerCase() : word.toUpperCase()
+    ).replace(/\s+/g, '');
+    return t[key] || t[camelKey] || t[`ex${key.charAt(0).toUpperCase() + key.slice(1)}`] || t[`ex${key}`] || t.outdoorRun || type;
+  };
+
+  const dateStr = new Date(session.startTime).toLocaleDateString(
+    language === "id" ? "id-ID" : language === "jp" ? "ja-JP" : "en-US",
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
 
   const handleShare = async () => {
     if (!screenRef.current || isSharing) return;
@@ -133,7 +144,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
 
       const dataUrl = canvas.toDataURL("image/png", 0.9);
       const shareText = isWorkout
-        ? `${t.workoutSummary}: ${session.type} - ${session.distance}% ${t.completed}. #FitGo`
+        ? `${t.workoutSummary}: ${translateType(session.type)} - ${session.distance}% ${t.completed}. #FitGo`
         : `${t.runSummary}: ${distDisplay.value} ${distDisplay.unit} @ ${paceDisplay}. #FitGo`;
 
       // Try navigator.share (web) with a File if available
@@ -190,7 +201,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
       try {
         await Share.share({
           title: t.appTitle,
-          text: `Fit Go: ${isWorkout ? session.type : "Activity"} completed!`,
+          text: `Fit Go: ${isWorkout ? translateType(session.type) : "Activity"} completed!`,
         });
       } catch (e) {
         alert(t.shareError);
@@ -223,13 +234,12 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
         <button
           onClick={handleShare}
           disabled={isSharing}
-          className={`p-4 rounded-2xl shadow-xl active:scale-95 transition-all ${
-            isSharing
-              ? "bg-gray-100 dark:bg-gray-700 text-gray-400"
-              : isWorkout
+          className={`p-4 rounded-2xl shadow-xl active:scale-95 transition-all ${isSharing
+            ? "bg-gray-100 dark:bg-gray-700 text-gray-400"
+            : isWorkout
               ? "bg-orange-500 text-white"
               : "bg-blue-600 text-white"
-          }`}
+            }`}
         >
           {isSharing ? (
             <Loader2 size={24} className="animate-spin" />
@@ -250,7 +260,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
             </div>
             <div className="mt-8 text-center space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 px-6">
               <h3 className="text-2xl font-black uppercase tracking-tighter dark:text-white leading-tight">
-                {session.type}
+                {translateType(session.type)}
               </h3>
               <p className="text-orange-500 font-black uppercase tracking-widest text-[10px]">
                 {t.exerciseCompleted}
@@ -271,7 +281,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
         )}
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-t-[56px] shadow-[0_-20px_50px_rgba(0,0,0,0.15)] z-[500] px-8 pt-6 pb-12 relative border-t border-gray-100 dark:border-gray-800">
+      <div className="bg-white dark:bg-gray-900 rounded-t-[56px] shadow-[0_-20px_50px_rgba(0,0,0,0.15)] z-[500] px-8 pt-6 pb-12 relative border-t border-gray-100 dark:border-gray-800 edge-blur-v">
         <div className="w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-8"></div>
 
         <div className="space-y-8">
@@ -292,7 +302,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
                 <div className="absolute left-1/2 -translate-x-1/2 top-6 pointer-events-none animate-in fade-in duration-500">
                   <img
                     src={iconImg}
-                    className="w-12 h-12 rounded-full bg-white p-1 shadow-xl"
+                    className="w-12 h-12 object-contain"
                     alt="Activity Icon"
                   />
                 </div>
@@ -305,7 +315,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
                 <div className="absolute left-1/2 -translate-x-1/2 top-6 pointer-events-none animate-in fade-in duration-500">
                   <img
                     src={workIcon}
-                    className="w-12 h-12 rounded-full bg-white p-1 shadow-xl"
+                    className="w-12 h-12 object-contain"
                     alt="Barbell Icon"
                   />
                 </div>
@@ -314,21 +324,19 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
 
             <div className="flex flex-col items-end text-right animate-in slide-in-from-right-4 duration-700">
               <span
-                className={`text-[10px] font-black uppercase tracking-widest mb-1 ${
-                  isWorkout
-                    ? "text-orange-500"
-                    : "text-blue-600 dark:text-blue-400"
-                }`}
+                className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isWorkout
+                  ? "text-orange-500"
+                  : "text-blue-600 dark:text-blue-400"
+                  }`}
               >
                 {isWorkout ? t.targetAchieved : t.distance}
               </span>
               <div className="flex items-baseline gap-1">
                 <span
-                  className={`text-4xl font-black tabular-nums tracking-tighter ${
-                    isWorkout
-                      ? "text-orange-500"
-                      : "text-blue-600 dark:text-blue-400"
-                  }`}
+                  className={`text-4xl font-black tabular-nums tracking-tighter ${isWorkout
+                    ? "text-orange-500"
+                    : "text-blue-600 dark:text-blue-400"
+                    }`}
                 >
                   {distDisplay.value}
                 </span>
@@ -341,16 +349,14 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
 
           <div className="grid grid-cols-3 gap-4">
             <div
-              className={`bg-gray-50 dark:bg-gray-800/50 p-4 rounded-3xl flex flex-col gap-1 border border-transparent transition-all ${
-                isWorkout
-                  ? "hover:border-orange-500/20"
-                  : "hover:border-blue-500/20"
-              }`}
+              className={`bg-gray-50 dark:bg-gray-800/50 p-4 rounded-3xl flex flex-col gap-1 border border-transparent transition-all ${isWorkout
+                ? "hover:border-orange-500/20"
+                : "hover:border-blue-500/20"
+                }`}
             >
               <div
-                className={`flex items-center gap-1.5 ${
-                  isWorkout ? "text-orange-500" : "text-purple-500"
-                }`}
+                className={`flex items-center gap-1.5 ${isWorkout ? "text-orange-500" : "text-purple-500"
+                  }`}
               >
                 {isWorkout ? <Zap size={14} /> : <Activity size={14} />}
                 <p className="text-[8px] font-black uppercase tracking-widest">
@@ -397,11 +403,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
           <div className="flex flex-col gap-5 pt-2">
             <div className="flex items-center gap-3 px-2">
               <div
-                className={`p-2 rounded-lg ${
-                  isWorkout
-                    ? "bg-orange-100 dark:bg-orange-900/30 text-orange-600"
-                    : "bg-green-100 dark:bg-green-900/30 text-green-600"
-                }`}
+                className={`p-2 rounded-lg ${isWorkout
+                  ? "bg-orange-100 dark:bg-orange-900/30 text-orange-600"
+                  : "bg-green-100 dark:bg-green-900/30 text-green-600"
+                  }`}
               >
                 <CheckCircle2 size={16} />
               </div>

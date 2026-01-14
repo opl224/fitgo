@@ -13,9 +13,9 @@ dist-ssr
 *.local
 public
 android
-locale
-icons
-utils
+# locale
+# icons
+# utils
 
 
 # Editor directories and files
