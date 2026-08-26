@@ -1,9 +1,47 @@
 
-export type Screen = 'onboarding' | 'dashboard' | 'run' | 'summary' | 'history' | 'profile' | 'workout' | 'about' | 'terms';
+export type Screen = 'dashboard' | 'run' | 'summary' | 'history' | 'profile' | 'workout' | 'about' | 'terms' | 'tech' | 'calorie' | 'chatbot';
 
 export type RunType = 'Free Run' | 'Interval' | 'Tempo' | 'Recovery' | 'Long Run';
 
+export interface FAQItem {
+  id: string;
+  question: {
+    id: string;
+    en: string;
+    jp: string;
+  };
+  answer: {
+    id: string;
+    en: string;
+    jp: string;
+  };
+  category: "app" | "tips" | "trouble";
+}
+
 export type WorkoutType = 'HIIT' | 'Strength' | 'Yoga' | 'Cardio';
+
+export interface CalorieResult {
+  bmrMifflin: number;
+  bmrHarris: number;
+  tdee: number;
+  recommendedDeficit: {
+    min: number;
+    max: number;
+  };
+  dailyTarget: number;
+  activityFactor: number;
+}
+
+export interface CalorieHistory {
+  id: string;
+  date: number;
+  weight: number;
+  height: number;
+  age: number;
+  gender: string;
+  activityLevel: string;
+  results: CalorieResult;
+}
 
 export interface GeoPoint {
   latitude: number;

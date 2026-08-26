@@ -4,7 +4,7 @@
   --pointer-from-center: 0;
   --pointer-from-top: 0.5;
   --pointer-from-left: 0.5;
-  --card-opacity: 0;
+  --card-opacity: 1;
   --rotate-x: 0deg;
   --rotate-y: 0deg;
   --background-x: 50%;
@@ -45,8 +45,8 @@
   background: radial-gradient(circle at var(--pointer-x) var(--pointer-y),
       var(--behind-glow-color) 0%,
       transparent var(--behind-glow-size));
-  filter: blur(50px) saturate(1.1);
-  opacity: calc(0.8 * var(--card-opacity));
+  filter: blur(8px) saturate(1.05);
+  opacity: calc(0.65 * var(--card-opacity));
   transition: opacity 200ms ease;
 }
 
@@ -102,10 +102,59 @@
   position: absolute;
   background-image: var(--inner-gradient),
     var(--icon);
-  background-size: 100% 100%, 120px 120px;
-  background-repeat: no-repeat, repeat;
+  background-size: 100% 100%, 96px 96px;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, calc(100% - 32px) calc(100% - 32px);
   background-color: rgba(10, 10, 15, 0.98);
   transform: none;
+}
+
+.pc-icon-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mask-image: var(--icon);
+  mask-mode: luminance;
+  mask-repeat: no-repeat;
+  mask-size: 96px 96px;
+  mask-position: calc(100% - 32px) calc(100% - 32px);
+  background-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y),
+      hsla(210, 100%, 70%, 0.7) 0%,
+      hsla(280, 100%, 75%, 0.6) 60%,
+      transparent 90%);
+  opacity: calc(0.35 + var(--pointer-from-center) * 0.45);
+  mix-blend-mode: screen;
+  transition: opacity 180ms ease;
+}
+
+.pc-semicolon {
+  position: absolute;
+  right: 32px;
+  bottom: 96px;
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  color: transparent;
+  background-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y),
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(125, 190, 255, 0.9) 50%,
+      rgba(255, 255, 255, 0.2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: calc(0.35 + var(--pointer-from-center) * 0.5);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
+  transition: opacity 180ms ease;
+  z-index: 3;
+}
+
+@media (max-width: 480px) {
+  .pc-semicolon {
+    font-size: 72px;
+    right: 24px;
+    bottom: 80px;
+  }
 }
 
 .pc-shine {
@@ -115,10 +164,12 @@
   mask-size: 150%;
   mask-position: top calc(200% - (var(--background-y) * 5)) left calc(100% - var(--background-x));
   transition: filter 0.8s ease;
-  filter: brightness(0.66) contrast(1.33) saturate(0.33) opacity(0.5);
+  filter: brightness(0.6) contrast(1.1) saturate(0.2) opacity(0.38);
   animation: holo-bg 18s linear infinite;
   animation-play-state: running;
   mix-blend-mode: color-dodge;
+  background-image: none;
+  display: none;
 }
 
 .pc-shine,
@@ -200,13 +251,13 @@
   background-size:
     250% 250%,
     100% 100%,
-    220px 220px;
+    260px 260px;
   background-position:
     var(--pointer-x) var(--pointer-y),
     center,
     calc(var(--pointer-x) * 0.01) calc(var(--pointer-y) * 0.01);
   background-blend-mode: color-dodge;
-  filter: brightness(calc(1.2 - var(--pointer-from-center) * 0.5)) contrast(calc(var(--pointer-from-center) + 1.2)) saturate(calc(0.3 + var(--pointer-from-center) * 0.2));
+  filter: brightness(calc(1.1 - var(--pointer-from-center) * 0.4)) contrast(calc(1 + var(--pointer-from-center) * 0.4)) saturate(calc(0.22 + var(--pointer-from-center) * 0.15));
   mix-blend-mode: luminosity;
 }
 
@@ -230,12 +281,13 @@
       hsl(248, 25%, 80%) 12%,
       hsla(207, 40%, 30%, 0.8) 90%);
   mix-blend-mode: overlay;
-  filter: brightness(0.4) contrast(1.1);
+  filter: brightness(0.35) contrast(1.05);
   z-index: 4;
+  display: none;
 }
 
 .pc-avatar-content {
-  mix-blend-mode: luminosity;
+  mix-blend-mode: normal;
   overflow: visible;
   transform: translateZ(2);
   backface-visibility: hidden;
@@ -248,6 +300,7 @@
   transform-origin: 50% 100%;
   transform: translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 6px)) translateZ(0) scaleY(calc(1 + (var(--pointer-from-top) - 0.5) * 0.02)) scaleX(calc(1 + (var(--pointer-from-left) - 0.5) * 0.01));
   bottom: -1px;
+  z-index: 2;
   backface-visibility: hidden;
   will-change: transform;
   transition: transform 120ms ease-out;
@@ -273,9 +326,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: calc(max(0px, var(--card-radius) - var(--ui-inset) + var(--ui-radius-bias)));
   padding: 12px 14px;
   pointer-events: auto;
@@ -332,7 +385,7 @@
   color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(6px);
 }
 
 .pc-contact-btn:hover {

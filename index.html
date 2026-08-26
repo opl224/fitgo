@@ -19,7 +19,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['kineks-round-font', 'Inter', 'sans-serif'],
                     },
                     animation: {
                         'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
@@ -40,8 +40,48 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'kineks-round-font';
+            src: url('./fonts/kineks-round-font/KineksRoundRegular-PVRl7.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'kineks-round-font';
+            src: url('./fonts/kineks-round-font/KineksRoundLight-m2r35.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'kineks-round-font';
+            src: url('./fonts/kineks-round-font/KineksRoundMedium-drejZ.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'kineks-round-font';
+            src: url('./fonts/kineks-round-font/KineksRoundSemiBold-LVWG3.ttf') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'kineks-round-font';
+            src: url('./fonts/kineks-round-font/KineksRoundBold-7OR34.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --sat: env(safe-area-inset-top);
             --sab: env(safe-area-inset-bottom);
@@ -58,7 +98,7 @@
             overflow: hidden;
             background-color: #f9fafb;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Inter', sans-serif;
+            font-family: 'kineks-round-font', 'Inter', sans-serif;
             user-select: none;
         }
 
@@ -299,29 +339,12 @@
             -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
         }
     </style>
-    <script type="importmap">
-{
-  "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.456.0",
-    "react": "https://esm.sh/react@^19.0.0",
-    "react-dom": "https://esm.sh/react-dom@^19.0.0",
-    "@capacitor/geolocation": "https://esm.sh/@capacitor/geolocation@^7.0.0",
-    "@capacitor/share": "https://esm.sh/@capacitor/share@^7.0.0",
-    "react/": "https://esm.sh/react@^19.2.1/",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "@capacitor/cli": "https://esm.sh/@capacitor/cli@^8.0.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.35.0"
-  }
-}
-</script>
-    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body class="antialiased overflow-hidden">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="module" src="./index.tsx"></script>
 </body>
 
 </html>

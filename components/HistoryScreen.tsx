@@ -1,24 +1,10 @@
 import React, { useRef, useState, useMemo } from "react";
-import {
-  ArrowLeft,
-  History,
-  MapPin,
-  ChevronRight,
-  ChevronLeft,
-  Trash2,
-  Download,
-  Upload,
-  RefreshCw,
-  Activity,
-  Dumbbell,
-  Calendar,
-  Filter,
-  X,
-} from "lucide-react";
+import { motion } from "motion/react";
 import { RunSession, UnitSystem } from "../types";
 import { addBackHandler } from "../utils/backButtonService";
 import { formatTime, getDistanceDisplay, getPaceDisplay } from "../utils";
 import { CustomDialog } from "./CustomDialog";
+import GriddyIcon from "./GriddyIcon";
 
 interface HistoryScreenProps {
   onBack: () => void;
@@ -161,9 +147,9 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
         <div className="flex items-center mb-6">
           <button
             onClick={onBack}
-            className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all"
+            className="p-3 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all"
           >
-            <ArrowLeft size={24} />
+            <GriddyIcon name="ArrowLeft" size={24} />
           </button>
           <span className="mx-auto font-black text-2xl text-gray-900 dark:text-white uppercase tracking-tighter">
             {t.history}
@@ -182,7 +168,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   setCurrentPage(1);
                 }}
                 className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${filterType === "all"
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
+                  ? "bg-blue-600 text-white"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
                   }`}
               >
@@ -194,11 +180,11 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   setCurrentPage(1);
                 }}
                 className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${filterType === "run"
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
+                  ? "bg-blue-600 text-white"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
                   }`}
               >
-                <MapPin size={14} /> {t.outdoorRun}
+                <GriddyIcon name="MapPin" size={14} /> {t.outdoorRun}
               </button>
               <button
                 onClick={() => {
@@ -206,18 +192,18 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   setCurrentPage(1);
                 }}
                 className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${filterType === "workout"
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
+                  ? "bg-blue-600 text-white"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
                   }`}
               >
-                <Dumbbell size={14} /> {t.training || 'Training'}
+                <GriddyIcon name="Dumbbell" size={14} /> {t.training || 'Training'}
               </button>
               <div className="w-12 flex-shrink-0" />
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex-1 relative">
+            <div className="flex-1 relative group">
               <input
                 type="date"
                 value={filterDate}
@@ -225,20 +211,23 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   setFilterDate(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[20px] px-5 py-3.5 text-xs font-black uppercase tracking-widest dark:text-white focus:ring-2 ring-blue-500 shadow-inner appearance-none"
+                className="absolute inset-0 opacity-0 z-20 cursor-pointer w-full h-full"
               />
-              {!filterDate && (
-                <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-gray-400">
-                  <Calendar size={16} />
+              <div className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[20px] px-5 py-3.5 flex items-center justify-between shadow-inner relative z-10 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 transition-colors">
+                <span className={`text-[10px] font-black uppercase tracking-widest ${filterDate ? 'text-gray-900 dark:text-white' : 'text-gray-400'}`}>
+                  {filterDate ? new Date(filterDate).toLocaleDateString(language === "id" ? "id-ID" : language === "jp" ? "ja-JP" : "en-US", { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase() : t.selectDate}
+                </span>
+                <div className="p-1.5 rounded-lg shadow-sm">
+                  <GriddyIcon name="Calendar" size={16} className="text-blue-600" />
                 </div>
-              )}
+              </div>
             </div>
             {(filterType !== "all" || filterDate) && (
               <button
                 onClick={clearFilters}
-                className="p-3.5 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-[20px] active:scale-90 transition-all"
+                className="p-3.5 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-[20px] active:scale-90 transition-all z-30"
               >
-                <X size={20} />
+                <GriddyIcon name="X" size={20} />
               </button>
             )}
           </div>
@@ -253,15 +242,12 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
         <div className="bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-[40px] p-8 border border-gray-100 dark:border-gray-800 shadow-sm animate-in fade-in duration-500">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl">
-              <RefreshCw size={24} />
+              <GriddyIcon name="Refresh" size={24} />
             </div>
             <div>
               <h4 className="font-black text-gray-900 dark:text-white text-base uppercase tracking-wider">
                 {t.syncData}
               </h4>
-              <p className="text-[11px] font-bold text-gray-400 uppercase mt-0.5 tracking-widest">
-                {t.backupInfo}
-              </p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -273,7 +259,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 : "bg-gray-50 dark:bg-gray-700/50 active:scale-95"
                 }`}
             >
-              <Download size={22} className={runHistory.length === 0 ? "text-gray-400" : "text-blue-600"} />
+              <GriddyIcon name="Download" size={22} className={runHistory.length === 0 ? "text-gray-400" : "text-blue-600"} />
               <span className={`text-[10px] font-black uppercase tracking-widest ${runHistory.length === 0 ? "text-gray-400" : "text-gray-700 dark:text-gray-200"
                 }`}>
                 {t.exportData}
@@ -283,7 +269,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
               onClick={() => fileInputRef.current?.click()}
               className="flex flex-col items-center justify-center gap-2 bg-gray-50 dark:bg-gray-700/50 py-5 rounded-2xl active:scale-95 transition-all group"
             >
-              <Upload size={22} className="text-purple-600" />
+              <GriddyIcon name="Upload" size={22} className="text-purple-600" />
               <span className="text-[10px] font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">
                 {t.importData}
               </span>
@@ -307,7 +293,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
         {paginatedHistory.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-gray-400 gap-6 animate-in fade-in duration-700">
             <div className="p-8 bg-gray-100 dark:bg-gray-900 rounded-full">
-              <History size={64} className="opacity-20" />
+              <GriddyIcon name="History" size={64} className="opacity-20" />
             </div>
             <div className="text-center">
               <p className="font-black uppercase tracking-[0.3em] text-sm opacity-40">
@@ -329,7 +315,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                   ? { value: session.distance, unit: "%" }
                   : getDistanceDisplay(session.distance, unitSystem);
                 const displayPace = isWorkout
-                  ? session.avgPace
+                  ? { value: session.distance.toString(), unit: "%" }
                   : getPaceDisplay(paceSecondsPerKm, unitSystem);
                 const date = new Date(session.startTime);
 
@@ -351,9 +337,9 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                             } rounded-[24px] flex items-center justify-center shadow-inner`}
                         >
                           {isWorkout ? (
-                            <Dumbbell size={28} />
+                            <GriddyIcon name="Dumbbell" size={28} />
                           ) : (
-                            <MapPin size={28} />
+                            <GriddyIcon name="MapPin" size={28} />
                           )}
                         </div>
                         <div>
@@ -361,7 +347,14 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                             {translateType(session.type)}
                           </h3>
                           <div className="flex items-center gap-2 mt-1">
-                            <Calendar size={12} className="text-gray-400" />
+                            <motion.div 
+                               whileHover={{ scale: 1.2, color: '#3b82f6' }}
+                               whileTap={{ scale: 0.9 }}
+                               className="flex items-center"
+                               title="History"
+                             >
+                               <GriddyIcon name="Calendar" size={12} className="text-gray-400 transition-colors" />
+                             </motion.div>
                             <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
                               {date.toLocaleDateString(
                                 language === "id" ? "id-ID" : language === "jp" ? "ja-JP" : "en-US",
@@ -388,27 +381,43 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                         onClick={(e) => handleDeleteRequest(e, session.id)}
                         className="p-4 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-[20px] active:scale-90 transition-all hover:bg-red-100 z-20"
                       >
-                        <Trash2 size={18} />
+                        <GriddyIcon name="Trash" size={18} />
                       </button>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 border-t border-gray-50 dark:border-gray-800 pt-6">
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase font-black text-gray-400 mb-1 tracking-widest">
-                          {isWorkout ? t.targetAchieved : t.distance}
+                          {isWorkout ? "Status" : t.distance}
                         </span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span
-                            className={`text-2xl font-black tabular-nums tracking-tighter ${isWorkout
-                              ? "text-orange-500"
-                              : "text-gray-900 dark:text-white"
-                              }`}
-                          >
-                            {displayDistance.value}
-                          </span>
-                          <span className="text-[10px] font-black text-gray-400 uppercase">
-                            {displayDistance.unit}
-                          </span>
+                        <div className="flex items-center gap-1.5">
+                          {isWorkout ? (
+                            <>
+                              {session.distance === 100 ? (
+                                <GriddyIcon name="Check" size={14} className="text-green-600" />
+                              ) : (
+                                <GriddyIcon name="X" size={14} className="text-red-500" />
+                              )}
+                              <span
+                                className={`text-[11px] font-black uppercase tracking-tight ${
+                                  session.distance === 100
+                                    ? "text-green-600"
+                                    : "text-red-500"
+                                }`}
+                              >
+                                {session.distance === 100 ? t.completed : "Belum"}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-2xl font-black text-gray-900 dark:text-white tabular-nums tracking-tighter">
+                                {displayDistance.value}
+                              </span>
+                              <span className="text-[10px] font-black text-gray-400 uppercase">
+                                {displayDistance.unit}
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
                       <div className="flex flex-col">
@@ -421,11 +430,24 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                       </div>
                       <div className="flex flex-col items-end text-right">
                         <span className="text-[10px] uppercase font-black text-gray-400 mb-1 tracking-widest">
-                          {isWorkout ? t.goal : t.pace}
+                          {isWorkout ? t.targetAchieved : t.pace}
                         </span>
-                        <span className="text-2xl font-black text-gray-900 dark:text-white tabular-nums tracking-tighter">
-                          {displayPace}
-                        </span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span
+                            className={`text-2xl font-black tabular-nums tracking-tighter ${
+                              isWorkout
+                                ? session.distance === 100
+                                  ? "text-green-600"
+                                  : "text-red-500"
+                                : "text-gray-900 dark:text-white"
+                            }`}
+                          >
+                            {displayPace.value}
+                            <span className="text-[10px] font-black text-gray-400 uppercase ml-0.5">
+                              {displayPace.unit}
+                            </span>
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -435,7 +457,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 group-hover:text-white transition-colors">
                           {t.viewDetails}
                         </span>
-                        <ChevronRight
+                        <GriddyIcon
+                          name="ChevronRight"
                           size={14}
                           className="text-gray-300 group-hover:text-white transition-colors"
                         />
@@ -457,7 +480,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                     : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
                     }`}
                 >
-                  <ChevronLeft size={24} />
+                  <GriddyIcon name="ArrowLeft" size={24} />
                 </button>
 
                 <div className="flex flex-col items-center">
@@ -482,7 +505,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                     : "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm"
                     }`}
                 >
-                  <ChevronRight size={24} />
+                  <GriddyIcon name="ChevronRight" size={24} />
                 </button>
               </div>
             )}
@@ -503,3 +526,5 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
     </div>
   );
 };
+
+export default HistoryScreen;

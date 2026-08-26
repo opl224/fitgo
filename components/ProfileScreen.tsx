@@ -1,28 +1,11 @@
-import React, { useState, useRef } from "react";
-import {
-  ArrowLeft,
-  User,
-  Check,
-  Moon,
-  Globe,
-  Ruler,
-  Map as MapIcon,
-  Share2,
-  ExternalLink,
-  Volume2,
-  Clock,
-  Plus,
-  Trash2,
-  Tally4,
-  ShieldCheck,
-  ChevronRight,
-  Activity,
-  Milestone,
-  Timer,
-  Info,
-  X,
-} from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import GriddyIcon from "./GriddyIcon";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Language, UnitSystem, AudioCuesSettings, PaceZone } from "../types";
+import { MapOfflineService } from "../utils/mapOfflineService";
+import { CustomDialog } from "./CustomDialog";
+import { UpdateCard, UpdateDetail } from "./UpdateCard";
+import { UpdateAdminModal } from "./UpdateAdminModal";
 
 interface ProfileScreenProps {
   onBack: () => void;
@@ -47,6 +30,7 @@ interface ProfileScreenProps {
   onClearCache: () => void;
   t: any; // Translation object
   onOpenAbout: () => void;
+  onProfileUpdate?: (shouldResetHistory?: boolean | 'workouts_only') => void;
   // Update Props
   appVersion?: string;
   updateInfo?: {
@@ -81,14 +65,78 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onClearCache,
   t,
   onOpenAbout,
-  appVersion = "1.0.0",
+  onProfileUpdate,
+  appVersion = "1.0.5",
   updateInfo = { hasUpdate: false, latestVersion: "1.0.0", downloadUrl: "", isSeen: false },
   onAckUpdate,
 }) => {
   const [editNameValue, setEditNameValue] = useState(userName);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [versionTapCount, setVersionTapCount] = useState(0);
+
+  const handleVersionTap = () => {
+    const newCount = versionTapCount + 1;
+    if (newCount >= 5) {
+      setIsAdminOpen(true);
+      setVersionTapCount(0);
+      // @ts-ignore - triggerHaptic might be available in the global scope or from a bridge
+      if (typeof triggerHaptic === 'function') triggerHaptic(200);
+    } else {
+      setVersionTapCount(newCount);
+      // Reset count after 2 seconds of inactivity
+      setTimeout(() => setVersionTapCount(0), 2000);
+    }
+  };
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isNameFocused, setIsNameFocused] = useState(false);
+  const [cacheSize, setCacheSize] = useState<string>("0 B");
+  const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+  const [isUpdateCardOpen, setIsUpdateCardOpen] = useState(false);
+
+  // Mock update detail - in real scenario this could come from updateInfo or another fetch
+  const mockUpdateDetail: UpdateDetail = {
+    version: updateInfo.latestVersion,
+    releaseDate: "11 Februari 2026",
+    fileSize: "4.5 MB",
+    priority: "optional", // could be derived from version jump (major vs minor)
+    changelog: {
+      newFeatures: [],
+      bugFixes: ["Bug chatbot"],
+      improvements: [
+        t.improvements_desc1,
+        t.improvements_desc2,
+        t.improvements_desc3,
+      ],
+    },
+  };
+
+  useEffect(() => {
+    updateCacheSize();
+  }, []);
+
+  const updateCacheSize = async () => {
+    const bytes = await MapOfflineService.getCacheSizeInBytes();
+    setCacheSize(formatBytes(bytes));
+  };
+
+  const formatBytes = (bytes: number, decimals = 2) => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    // Enforce dot separator
+    const val = (bytes / Math.pow(k, i)).toFixed(dm);
+    return parseFloat(val).toString().replace(',', '.') + " " + sizes[i];
+  };
+
+  const handleClearCache = async () => {
+    await MapOfflineService.clearCache();
+    await updateCacheSize();
+    setIsConfirmingClear(false);
+    if (onClearCache) onClearCache();
+  };
 
   const saveProfile = () => {
     const finalName = editNameValue.trim().slice(0, 9);
@@ -122,13 +170,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   };
 
   return (
-    <div className="h-screen w-screen bg-white dark:bg-black flex flex-col transition-colors duration-300 overflow-hidden">
-      <div className="p-6 pt-12 flex items-center bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 z-20 rounded-b-[64px] shadow-xl pb-12 transition-all">
+    <div className="h-screen w-screen bg-white dark:bg-black flex flex-col transition-colors duration-300 overflow-hidden animate-in fade-in slide-in-from-left-4">
+      <div className="profile-header p-6 pt-12 flex items-center bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 z-20 rounded-b-[64px] shadow-xl pb-12 transition-all">
         <button
           onClick={onBack}
-          className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all"
+          className="p-3 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all"
         >
-          <ArrowLeft size={24} />
+          <GriddyIcon name="ArrowLeft" size={24} />
         </button>
         <span className="mx-auto font-black text-xl text-gray-800 dark:text-white uppercase tracking-[0.2em]">
           {t.settings}
@@ -148,7 +196,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <User
+                  <GriddyIcon
+                    name="User"
                     size={56}
                     className="text-gray-300 dark:text-gray-600"
                   />
@@ -184,7 +233,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   onClick={saveProfile}
                   className="bg-blue-600 text-white p-4 rounded-2xl shadow-lg active:scale-95 transition-all animate-in zoom-in fade-in duration-300"
                 >
-                  <Check size={20} />
+                  <GriddyIcon name="Check" size={20} />
                 </button>
               )}
             </div>
@@ -194,7 +243,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <div className="flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl text-purple-600 dark:text-purple-400">
-                  <Moon size={20} />
+                  <GriddyIcon name="Moon" size={20} />
                 </div>
                 <span className="font-bold dark:text-white">{t.darkMode}</span>
               </div>
@@ -214,7 +263,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="flex items-center justify-between p-5">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl text-yellow-600 dark:text-yellow-400">
-                    <Volume2 size={20} />
+                    <GriddyIcon name="Volume" size={20} />
                   </div>
                   <span className="font-bold dark:text-white">
                     {t.audioCues}
@@ -242,7 +291,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
                 <div className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <Activity size={16} className="text-gray-400" />
+                    <GriddyIcon name="Mountain" size={16} className="text-gray-400" />
                     <span className="text-sm font-bold dark:text-white uppercase tracking-wider text-xs">
                       {t.paceAlerts}
                     </span>
@@ -261,7 +310,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
                 <div className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <Activity size={16} className="text-gray-400 rotate-90" />
+                    <GriddyIcon name="Activity" size={16} className="text-gray-400 rotate-90" />
                     <span className="text-sm font-bold dark:text-white uppercase tracking-wider text-xs">
                       {t.milestoneAlerts}
                     </span>
@@ -282,7 +331,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <Timer size={16} className="text-gray-400" />
+                    <GriddyIcon name="Timer" size={16} className="text-gray-400" />
                     <span className="text-sm font-bold dark:text-white uppercase tracking-wider text-xs">
                       {t.alertFrequency}
                     </span>
@@ -312,45 +361,21 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <div className="flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl text-green-600 dark:text-green-400">
-                  <Globe size={20} />
+                  <GriddyIcon name="Translate" size={20} />
                 </div>
                 <span className="font-bold dark:text-white">{t.language}</span>
               </div>
-              <div className="flex bg-gray-200 dark:bg-gray-700 rounded-xl p-1.5">
-                <button
-                  onClick={() => setLanguage("en")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${language === "en"
-                    ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-white"
-                    : "text-gray-500"
-                    }`}
-                >
-                  EN
-                </button>
-                <button
-                  onClick={() => setLanguage("id")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${language === "id"
-                    ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-white"
-                    : "text-gray-500"
-                    }`}
-                >
-                  ID
-                </button>
-                <button
-                  onClick={() => setLanguage("jp")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${language === "jp"
-                    ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-white"
-                    : "text-gray-500"
-                    }`}
-                >
-                  JP
-                </button>
-              </div>
+              <LanguageSwitcher 
+                currentLanguage={language} 
+                onLanguageChange={setLanguage} 
+                isDarkMode={isDarkMode} 
+              />
             </div>
 
             <div className="flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
-                  <MapIcon size={20} />
+                  <GriddyIcon name="Map" size={20} />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-bold dark:text-white">
@@ -362,7 +387,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 </div>
               </div>
               <button
-                onClick={onClearCache}
+                onClick={() => setIsConfirmingClear(true)}
                 className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl active:scale-95 transition-all"
               >
                 <span className="text-xs font-black">{t.clearCache}</span>
@@ -374,7 +399,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               onClick={() => {
                 if (updateInfo.hasUpdate) {
                   if (onAckUpdate) onAckUpdate();
-                  window.open(updateInfo.downloadUrl, "_blank");
+                  setIsUpdateCardOpen(true);
                 }
               }}
               className={`flex items-center justify-between p-5 rounded-2xl border transition-all active:scale-[0.98] group ${updateInfo.hasUpdate
@@ -387,9 +412,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
                   : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                   }`}>
-                  <ShieldCheck size={20} />
+                  <GriddyIcon name="History" size={20} />
                 </div>
-                <div className="flex flex-col items-start">
+                <div className="flex flex-col items-start" onClick={handleVersionTap}>
                   <span className="font-bold dark:text-white">
                     {t.appVersion || "App Version"}
                   </span>
@@ -398,8 +423,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                       v{appVersion}
                     </span>
                     {updateInfo.hasUpdate && (
-                      <span className="text-[10px] font-black text-red-500 uppercase tracking-wider animate-pulse">
-                        • UPDATE v{updateInfo.latestVersion}
+                      <span className="text-[10px] font-black text-red-500 uppercase tracking-wider"> • {t.update} v{updateInfo.latestVersion}
                       </span>
                     )}
                   </div>
@@ -408,14 +432,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
               {updateInfo.hasUpdate ? (
                 <div className="relative">
-                  <ExternalLink size={20} className="text-blue-600 dark:text-blue-400" />
+                  <GriddyIcon name="Download" size={20} className="text-blue-600 dark:text-blue-400" />
                   {!updateInfo.isSeen && (
-                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white dark:border-gray-900 animate-bounce"></div>
+                    <div className="absolute -top-3 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white dark:border-gray-900"></div>
                   )}
                 </div>
               ) : (
                 <span className="text-xs font-bold text-gray-400">
-                  Latest
+                  {t.latest}
                 </span>
               )}
             </button>
@@ -426,11 +450,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl text-indigo-600 dark:text-indigo-400">
-                  <Info size={20} />
+                  <GriddyIcon name="Info" size={20} />
                 </div>
                 <span className="font-bold dark:text-white">{t.about}</span>
               </div>
-              <ChevronRight
+              <GriddyIcon
+                name="ChevronRight"
                 size={20}
                 className="text-gray-400 group-hover:translate-x-1 transition-transform"
               />
@@ -438,6 +463,42 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </div>
         </div>
       </div>
+
+      <CustomDialog
+        isOpen={isConfirmingClear}
+        onClose={() => setIsConfirmingClear(false)}
+        onConfirm={handleClearCache}
+        title={t.confirmClear || "Clear Cache"}
+        message={(t.confirmClearDesc || "Current cache size: ") + cacheSize}
+        confirmText={t.clearCache || "Clear"}
+        cancelText={t.cancel || "Cancel"}
+        type="danger"
+      />
+
+      {/* Modals */}
+      <UpdateCard
+        isOpen={isUpdateCardOpen}
+        onClose={() => setIsUpdateCardOpen(false)}
+        onDownload={() => {
+          window.open(updateInfo.downloadUrl, "_blank");
+          setIsUpdateCardOpen(false);
+        }}
+        currentVersion={appVersion}
+        latestVersion={updateInfo.latestVersion}
+        updateDetail={mockUpdateDetail}
+        isDarkMode={isDarkMode}
+        t={t}
+      />
+
+      <UpdateAdminModal 
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        currentVersion={appVersion}
+        isDarkMode={isDarkMode}
+        t={t}
+      />
     </div>
   );
 };
+
+export default ProfileScreen;

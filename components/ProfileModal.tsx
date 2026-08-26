@@ -1,14 +1,5 @@
 import React, { useState, useRef } from "react";
-import {
-  X,
-  Camera,
-  User,
-  Check,
-  Moon,
-  Globe,
-  Ruler,
-  Map as MapIcon,
-} from "lucide-react";
+import { GriddyIcon } from "./GriddyIcon";
 import { Language, UnitSystem } from "../types";
 
 interface ProfileModalProps {
@@ -89,7 +80,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onClick={onClose}
             className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full"
           >
-            <X size={20} className="dark:text-white" />
+            <GriddyIcon name="X" size={20} className="dark:text-white" />
           </button>
         </div>
 
@@ -106,7 +97,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <User
+                    <GriddyIcon
+                      name="User"
                       size={40}
                       className="text-gray-400 dark:text-gray-500"
                     />
@@ -117,7 +109,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 className="absolute bottom-0 right-0 p-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors"
               >
-                <Camera size={16} />
+                <GriddyIcon name="Camera" size={16} />
               </button>
               <input
                 type="file"
@@ -145,7 +137,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 onClick={saveProfile}
                 className="bg-blue-600 text-white p-3 rounded-xl"
               >
-                <Check size={20} />
+                <GriddyIcon name="Check" size={20} />
               </button>
             </div>
           </div>
@@ -153,7 +145,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400">
-                <Moon size={20} />
+                <GriddyIcon name="Moon" size={20} />
               </div>
               <span className="font-semibold dark:text-white">
                 {t.darkMode}
@@ -176,7 +168,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400">
-                <Globe size={20} />
+                <GriddyIcon name="Translate" size={20} />
               </div>
               <span className="font-semibold dark:text-white">
                 {t.language}
@@ -210,7 +202,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-pink-100 dark:bg-pink-900/30 rounded-lg text-pink-600 dark:text-pink-400">
-                <Ruler size={20} />
+                <GriddyIcon name="Ruler" size={20} />
               </div>
               <span className="font-semibold dark:text-white">{t.units}</span>
             </div>
@@ -242,7 +234,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
-                <MapIcon size={20} />
+                <GriddyIcon name="Map" size={20} />
               </div>
               <div className="flex flex-col">
                 <span className="font-semibold dark:text-white">

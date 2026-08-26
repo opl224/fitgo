@@ -40,16 +40,17 @@
 }
 
 .cloud-front {
-  padding-top: 50px;
-  margin-left: 30px;
+  padding-top: 30px;
+  margin-left: 8px;
   display: inline;
   position: absolute;
+  top: -10px;
   z-index: 11;
   animation: clouds-drift 8s infinite ease-in-out;
 }
 
 .cloud-back {
-  margin-top: -35px;
+  margin-top: -45px;
   margin-left: 100px;
   z-index: 10;
   animation: clouds-drift 12s infinite ease-in-out;
@@ -123,10 +124,19 @@
 }
 
 .sun-core {
-  width: 120px;
+  width: 120x;
   height: 120px;
   background: linear-gradient(to right, #fcbb04, #fffc00);
   border-radius: 50%;
+  display: inline;
+  position: absolute;
+}
+
+.sun {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(to right, #fcbb04, #fffc00);
+  border-radius: 60px;
   display: inline;
   position: absolute;
 }
@@ -140,6 +150,15 @@
   animation: sun-pulse 2s infinite;
 }
 
+.sunshine {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #fffc00 0%, transparent 70%);
+  border-radius: 50%;
+  animation: sunshines 2s infinite;
+}
+
 @keyframes sun-pulse {
   0% {
     transform: scale(1);
@@ -148,6 +167,17 @@
 
   100% {
     transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes sunshines {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.4);
     opacity: 0;
   }
 }
@@ -173,6 +203,44 @@
   background: transparent;
 }
 
+.moon {
+  height: 120px;
+  width: 120px;
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  border-radius: 50%;
+  position: absolute;
+  box-shadow:
+    0 0 40px rgba(235, 235, 235, 0.5),
+    inset -5px -5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.crater {
+  position: absolute;
+  background: rgba(200, 200, 200, 0.3);
+  border-radius: 50%;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cr1 {
+  width: 15px;
+  height: 15px;
+  top: 20px;
+  left: 15px;
+}
+.cr2 {
+  width: 20px;
+  height: 20px;
+  top: 45px;
+  left: 40px;
+}
+.cr3 {
+  width: 12px;
+  height: 12px;
+  top: 55px;
+  left: 20px;
+}
+
 .moon-glow {
   position: absolute;
   width: 100px;
@@ -182,6 +250,361 @@
   animation: moon-pulse 4s infinite ease-in-out;
 }
 
+/* Pastikan bubble chat tidak memotong kata secara paksa */
+/* Ganti style bubble chat kamu dengan ini */
+.chat-bubble {
+  max-width: 75%; /* Supaya tidak terlalu lebar ke pinggir */
+  width: fit-content;
+  white-space: normal; /* Biar teks bisa turun baris dengan benar */
+  word-break: break-word; /* Potong kata kalau terlalu panjang */
+  display: block;
+  padding: 10px 14px;
+}
+
+/* Tambahkan ini untuk memperbaiki bubble chat */
+.user-bubble {
+  max-width: 85%;
+  width: fit-content;
+  word-break: break-word; /* Memotong kata panjang */
+  overflow-wrap: anywhere;
+  white-space: pre-wrap; /* Menjaga spasi tetap ada tapi bisa turun baris */
+  display: inline-block; /* Memastikan bubble mengikuti panjang teks */
+}
+
+/* iMessage Style Chat Bubbles */
+.imessage {
+  display: flex;
+  flex-direction: column;
+  font-family: "wida_round", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.imessage p {
+  border-radius: 1.15rem;
+  line-height: 1.4;
+  max-width: 85%;
+  min-width: 20px;
+  padding: 0.6rem 1.2rem 0.6rem 1rem;
+  position: relative;
+  word-wrap: break-word;
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bubble-single-line,
+.bubble-multi-line {
+  /* Gunakan block dengan fit-content untuk akurasi lebar terbaik */
+  display: block !important;
+  width: fit-content !important;
+  
+  /* Batasi lebar maksimal agar tetap pindah baris secara natural */
+  max-width: 80% !important; 
+  min-width: fit-content !important;
+
+  /* Menghilangkan paksaan column yang bikin teks menciut */
+  flex-direction: unset !important;
+
+  /* Supaya teks pendek tidak pecah, panjang tetap bungkus */
+  white-space: pre-wrap !important;
+  
+  /* Anywhere mengizinkan pemutusan hanya jika benar-benar mentok max-width */
+  overflow-wrap: anywhere !important;
+  word-break: normal !important; 
+
+  /* Padding yang seimbang */
+  padding: 0.6rem 1rem !important;
+  box-sizing: border-box !important;
+  line-height: 1.4 !important;
+}
+
+/* KHUSUS: Untuk kata yang sangat pendek agar tidak terpotong */
+.bubble-single-line {
+  /* Paksa teks pendek untuk selalu melebar secara maksimal sebelum pindah baris */
+  width: max-content !important;
+}
+
+/* Reset untuk bubble user agar tidak narik ke kiri */
+.from-me {
+  align-self: flex-end;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+.bubble-single-line::after {
+  content: "\00a0"; /* Non-breaking space */
+  display: inline;
+  font-size: 0;
+}
+
+.chat-container-bg {
+  position: relative !important;
+  background: transparent !important;
+}
+
+/* Seamless Background Effect (WhatsApp Style) */
+.whatsapp-bg-container {
+  position: relative !important;
+  background-image: url('/bg-chatbot.jpeg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important; /* Mobile friendly attachment */
+  z-index: 0 !important;
+}
+
+.whatsapp-input-bg {
+  position: relative !important;
+  background-image: url('/bg-chatbot.jpeg') !important;
+  background-size: cover !important;
+  background-position: center bottom !important; /* Align with bottom of the container */
+  background-repeat: no-repeat !important;
+  z-index: 0 !important;
+}
+
+.whatsapp-bg-container::before,
+.whatsapp-input-bg::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: rgba(255, 255, 255, 0.7) !important; /* Overlay putih transparan */
+  z-index: -1 !important;
+}
+
+.dark .whatsapp-bg-container::before,
+.dark .whatsapp-input-bg::before {
+  background-color: rgba(10, 10, 10, 0.85) !important; /* Overlay gelap untuk dark mode */
+}
+
+/* Header Curved Style */
+.curved-header {
+  background-color: #FFFFFF !important;
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border-bottom: none !important;
+}
+
+.dark .curved-header {
+  background-color: #1A1A1A !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Footer Glass Style */
+.glass-footer {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-top: 1px solid rgba(223, 230, 233, 0.5) !important;
+}
+
+.dark .glass-footer {
+  background-color: rgba(26, 26, 26, 0.4) !important;
+  border-top: 1px solid rgba(51, 51, 51, 0.5) !important;
+}
+
+/* Menghilangkan background internal agar tembus ke container utama */
+.chat-container-bg::before {
+  display: none !important;
+}
+
+/* Responsive Tech Section */
+.tech-section-container {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+  .tech-section-container h4 {
+    font-size: 14px !important;
+  }
+  
+  .tech-section-container p {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+  
+  .tech-section-container span {
+    font-size: 12px !important;
+  }
+  
+  .tech-section-container .grid {
+    gap: 12px !important;
+  }
+  
+  .tech-section-container .p-3 {
+    padding: 12px !important;
+  }
+}
+
+.imessage p::before,
+.imessage p::after {
+  bottom: -0.1rem;
+  content: "";
+  height: 1rem;
+  position: absolute;
+}
+
+.from-me {
+  align-self: flex-end;
+  background-color: #00B894;
+  color: #fff;
+  margin-right: 10px !important; /* Jarak dari tepi kanan kontainer */
+}
+
+.from-me::before {
+  border-bottom-left-radius: 0.8rem 0.7rem;
+  border-right: 1rem solid #00B894;
+  right: -0.35rem;
+  transform: translate(0, -0.1rem);
+}
+
+.from-me::after {
+  background-color: #fff;
+  border-bottom-left-radius: 0.5rem;
+  right: -40px;
+  transform: translate(-30px, -2px);
+  width: 10px;
+}
+
+.dark .from-me::after {
+  background-color: #0A0A0A; /* Matches chat area background */
+}
+
+.from-them {
+  align-self: flex-start;
+  background-color: #e5e5ea;
+  color: #000;
+  margin-left: 0 !important;
+  margin-right: 40px !important;
+  max-width: 85% !important; /* Adjusted from fixed 260px to responsive 85% */
+}
+
+.from-them::before {
+  border-bottom-right-radius: 0.8rem 0.7rem;
+  border-left: 1rem solid #e5e5ea;
+  left: -0.35rem;
+  transform: translate(0, -0.1rem);
+}
+
+.from-them::after {
+  background-color: #fff;
+  border-bottom-right-radius: 0.5rem;
+  left: 20px;
+  transform: translate(-30px, -2px);
+  width: 10px;
+}
+
+.dark .from-them {
+  background-color: #3a3a3c;
+  color: #fff;
+}
+
+.dark .from-them::before {
+  border-left-color: #3a3a3c;
+}
+
+.dark .from-them::after {
+  background-color: #0A0A0A; /* Matches chat area background */
+}
+
+.no-tail::before {
+  display: none !important;
+}
+
+.imessage p.emoji {
+  background: none !important;
+  font-size: 2.5rem;
+  padding: 0;
+}
+
+.imessage p.emoji::before {
+  content: none;
+}
+
+@keyframes badge-scroll {
+  0% {
+    transform: translateX(130px);
+  }
+  100% {
+    transform: translateX(-290px);
+  }
+}
+
+/* Skeleton Loader Shimmer Effect */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #f3f4f6; /* bg-gray-100 */
+}
+
+.dark .skeleton {
+  background-color: #1f2937; /* bg-gray-800 */
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+.dark .skeleton::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0)
+  );
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+:root {
+  --loader-color: #000000;
+}
+
+.dark {
+  --loader-color: #ffffff;
+}
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(farthest-side, var(--loader-color) 94%, transparent) top/8px 8px no-repeat,
+    conic-gradient(transparent 30%, var(--loader-color));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), black 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 8px), black 0);
+  animation: l13 1s infinite linear;
+}
+@keyframes l13 {
+  100% { transform: rotate(1turn) }
+}
 @keyframes moon-pulse {
 
   0%,
@@ -207,20 +630,34 @@
   position: absolute;
   background: white;
   border-radius: 50%;
-  animation: twinkle var(--duration) infinite ease-in-out;
+  will-change: opacity, transform;
+  transform: translateZ(0);
 }
 
-@keyframes twinkle {
+/* Smooth appear: fade-in + scale from 0.8 to 1.0 (ease-out) */
+@keyframes star-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.0);
+  }
+}
+
+/* Twinkle: 1.0 -> 0.7 -> 1.0 opacity, smooth loop */
+@keyframes star-twinkle {
 
   0%,
   100% {
-    opacity: 0.3;
-    transform: scale(0.8);
+    opacity: 1.0;
+    transform: scale(1.0);
   }
 
   50% {
-    opacity: 1;
-    transform: scale(1);
+    opacity: 0.7;
+    transform: scale(1.0);
   }
 }
 
@@ -270,6 +707,7 @@
 
 .weather-temp {
   position: absolute;
+  top: 120px;
   left: 20px;
   bottom: 0px;
   font-weight: 900;
@@ -326,11 +764,13 @@
   height: 10px;
   border-radius: 1px;
   animation: rain-fall 1s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, -50px, 0);
 }
 
 @keyframes rain-fall {
   0% {
-    transform: translateY(-50px);
+    transform: translate3d(0, -50px, 0);
     opacity: 0;
   }
 
@@ -339,7 +779,156 @@
   }
 
   100% {
-    transform: translateY(150px);
+    transform: translate3d(0, 150px, 0);
     opacity: 0;
   }
+}
+
+/* Animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* From Uiverse.io by aryamitra06 - Adapted for FitGo */
+:root {
+  --loader-color: rgba(0, 0, 0, 0.5);
+  --loader-active-color: #000;
+}
+
+.dark {
+  --loader-color: rgba(255, 255, 255, 0.5);
+  --loader-active-color: #fff;
+}
+
+.loader-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background-color: #f3f4f6; /* bg-gray-100 */
+  transition: background-color 0.3s ease;
+  animation: loader-fade-in 0.3s ease-out;
+}
+
+@keyframes loader-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dark .loader-container {
+  background-color: #000; /* bg-black */
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+}
+
+.loader .bar {
+  display: inline-block;
+  width: 3px;
+  height: 20px;
+  background-color: var(--loader-color);
+  border-radius: 10px;
+  animation: scale-up4 1s linear infinite;
+}
+
+.loader .bar:nth-child(2) {
+  height: 35px;
+  margin: 0 5px;
+  animation-delay: .25s;
+}
+
+.loader .bar:nth-child(3) {
+  animation-delay: .5s;
+}
+
+@keyframes scale-up4 {
+  20% {
+    background-color: var(--loader-active-color);
+    transform: scaleY(1.5);
+  }
+
+  40% {
+    transform: scaleY(1);
+  }
+}
+
+/* Chat Scroll Blink/Shimmer Effect */
+.chat-shimmer-active {
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-shimmer-active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 80%,
+    transparent 100%
+  );
+  animation: chat-blink 1.5s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.dark .chat-shimmer-active::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 80%,
+    transparent 100%
+  );
+}
+
+@keyframes chat-blink {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Page Transition for Chatbot */
+.page-transition-enter {
+  opacity: 0;
+  transform: scale(1.05);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 400ms, transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.page-transition-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.page-transition-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 300ms, transform 300ms cubic-bezier(0.7, 0, 0.84, 0);
 }

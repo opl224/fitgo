@@ -40,8 +40,7 @@ const adjust = (v: number, fMin: number, fMax: number, tMin: number, tMax: numbe
 
 const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   avatarUrl = '/me.png',
-  iconUrl = '/semicolon.png',
-  grainUrl = '/grain.jpg',
+  grainUrl,
   innerGradient,
   behindGlowEnabled = true,
   behindGlowColor,
@@ -53,9 +52,9 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   miniAvatarUrl,
   name = 'Opal',
   title = 'dev pemula',
-  handle = 'opal',
-  status = 'Online',
-  contactText = 'Contact',
+  handle = 'nxopl',
+  status = 'ngangur',
+  contactText = 'loker',
   showUserInfo = true,
   onContactClick
 }) => {
@@ -315,16 +314,20 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   const cardStyle = useMemo(
     () =>
       ({
-        '--icon': iconUrl ? `url(${iconUrl})` : 'none',
+        '--icon': 'none',
         '--grain': grainUrl ? `url(${grainUrl})` : 'none',
         '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT,
         '--behind-glow-color': behindGlowColor ?? 'rgba(125, 190, 255, 0.67)',
         '--behind-glow-size': behindGlowSize ?? '50%'
       }) as React.CSSProperties,
-    [iconUrl, grainUrl, innerGradient, behindGlowColor, behindGlowSize]
+    [grainUrl, innerGradient, behindGlowColor, behindGlowSize]
   );
 
   const handleContactClick = useCallback(() => {
+    const email = "siapaajaboleh202@gmail.com";
+    const subject = encodeURIComponent("Support & Bug Report");
+    const mailto = `mailto:${email}?subject=${subject}`;
+    window.location.href = mailto;
     onContactClick?.();
   }, [onContactClick]);
 
@@ -334,6 +337,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
       <div ref={shellRef} className="pc-card-shell">
         <section className="pc-card">
           <div className="pc-inside">
+            <div className="pc-icon-tint" />
             <div className="pc-shine" />
             <div className="pc-glare" />
             <div className="pc-content pc-avatar-content">

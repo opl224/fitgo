@@ -1,22 +1,12 @@
 
 import React from 'react';
-import {
-  ChevronRight,
-  ChevronLeft,
-  Dumbbell,
-  Scale,
-  Activity,
-  Target,
-  ShieldAlert,
-  Check,
-  Plus,
-  Minus
-} from 'lucide-react';
+import { GriddyIcon } from './GriddyIcon';
 import { UserPhysicalProfile } from '../types';
 
 interface WorkoutAssessmentProps {
   onComplete: (profile: UserPhysicalProfile) => void;
   t: any;
+  initialProfile?: Partial<UserPhysicalProfile>;
 }
 
 const StepperInput: React.FC<{
@@ -37,9 +27,9 @@ const StepperInput: React.FC<{
       <div className="flex items-center justify-between w-full px-2">
         <button
           onClick={decrement}
-          className="w-10 h-10 rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-center text-blue-600 active:scale-90 transition-all"
+          className="w-10 h-10 rounded-2xl bg-white dark:bg-800 shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-center text-blue-600 active:scale-90 transition-all"
         >
-          <Minus size={18} strokeWidth={3} />
+          <GriddyIcon name="Minus" size={18} />
         </button>
 
         <div className="flex flex-col items-center">
@@ -55,16 +45,16 @@ const StepperInput: React.FC<{
           onClick={increment}
           className="w-10 h-10 rounded-2xl bg-blue-600 shadow-md flex items-center justify-center text-white active:scale-90 transition-all"
         >
-          <Plus size={18} strokeWidth={3} />
+          <GriddyIcon name="Plus" size={18} />
         </button>
       </div>
     </div>
   );
 };
 
-export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete, t }) => {
+export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete, t, initialProfile }) => {
   const [step, setStep] = React.useState(1);
-  const [profile, setProfile] = React.useState<Partial<UserPhysicalProfile>>({
+  const [profile, setProfile] = React.useState<Partial<UserPhysicalProfile>>(initialProfile || {
     gender: 'male',
     age: 25,
     weight: 70,
@@ -79,13 +69,12 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
   const prevStep = () => setStep(s => s - 1);
 
   const handleComplete = () => {
-    if (profile.age && profile.weight && profile.height) {
-      onComplete(profile as UserPhysicalProfile);
-    }
+    // console.log("Completing assessment with profile:", profile);
+    onComplete(profile as UserPhysicalProfile);
   };
 
   const renderStep1 = () => (
-    <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 py-4 overflow-x-hidden touch-none w-full max-w-full">
+    <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 py-4 overflow-x-hidden w-full max-w-full relative z-10">
       <div className="space-y-2 text-center px-4">
         <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">{t.step} 1 {t.of} 3</span>
         <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter leading-tight">{t.askAge}</h2>
@@ -131,7 +120,7 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
   );
 
   const renderStep2 = () => (
-    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 py-4 flex flex-col">
+    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 py-4 flex flex-col relative z-10">
       <div className="space-y-2 text-center px-6">
         <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">{t.step} 2 {t.of} 3</span>
         <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter leading-tight">{t.trainingGoal}</h2>
@@ -139,12 +128,12 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
       </div>
 
       {/* Area Scroll Horizontal diperluas dengan padding vertikal agar scale-105 tidak terpotong */}
-      <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-6 px-10 py-10">
+      <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-6 px-10 py-20 pt-8">
         {[
-          { id: 'weightloss', icon: <Scale />, color: 'orange' },
-          { id: 'muscle', icon: <Dumbbell />, color: 'blue' },
-          { id: 'endurance', icon: <Activity />, color: 'emerald' },
-          { id: 'health', icon: <Target />, color: 'purple' }
+          { id: 'weightloss', icon: <GriddyIcon name="Scale" />, color: 'orange' },
+          { id: 'muscle', icon: <GriddyIcon name="Dumbbell" />, color: 'blue' },
+          { id: 'endurance', icon: <GriddyIcon name="Activity" />, color: 'emerald' },
+          { id: 'health', icon: <GriddyIcon name="Heart" />, color: 'purple' }
         ].map((g) => (
           <button
             key={g.id}
@@ -179,7 +168,7 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
   );
 
   const renderStep3 = () => (
-    <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 py-4">
+    <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 py-4 relative z-10">
       <div className="space-y-2 text-center px-6">
         <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">{t.step} 3 {t.of} 3</span>
         <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter leading-tight">{t.healthStatus}</h2>
@@ -191,7 +180,7 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-4">
               <div className={`p-4 rounded-3xl ${profile.hasInjury ? 'bg-red-500 text-white' : 'bg-green-100 text-green-600'} transition-colors shadow-lg`}>
-                <ShieldAlert size={28} />
+                <GriddyIcon name="ShieldAlert" size={28} />
               </div>
               <span className="font-black dark:text-white uppercase tracking-tight text-lg">{t.everInjured}</span>
             </div>
@@ -213,15 +202,15 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
         </div>
       </div>
 
-      <div className="space-y-6 px-6 text-center">
+      <div className="space-y-6 px-6 text-center pb-12">
         <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{t.weeklyFrequency}</label>
-        <div className="relative">
-          <div className="flex overflow-x-auto no-scrollbar gap-3 px-10 py-2" style={{ maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}>
+        <div className="relative z-[50]">
+          <div className="flex overflow-x-auto no-scrollbar gap-3 px-10 pt-4 pb-10" style={{ maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}>
             {[1, 2, 3, 4, 5, 6, 7].map(f => (
               <button
                 key={f}
                 onClick={() => setProfile({ ...profile, frequency: f })}
-                className={`flex-shrink-0 w-16 h-16 rounded-2xl font-black text-xl transition-all flex items-center justify-center ${profile.frequency === f ? 'bg-blue-600 text-white shadow-xl scale-110' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}
+                className={`flex-shrink-0 w-16 h-16 rounded-2xl font-black text-xl transition-all duration-300 flex items-center justify-center relative z-10 ${profile.frequency === f ? 'bg-blue-600 text-white shadow-[0_20px_40px_-12px_rgba(37,99,235,0.4)] scale-110' : 'bg-gray-50 dark:bg-gray-800 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
               >
                 {f}
               </button>
@@ -252,14 +241,14 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
       </div>
 
       {/* Fixed Footer Navigation */}
-      <div className="h-32 shrink-0 p-6 flex items-start bg-white dark:bg-black border-t border-gray-50 dark:border-gray-900">
-        <div className="flex gap-4 w-full max-w-md mx-auto">
+      <div className="h-32 shrink-0 p-6 flex items-center bg-white dark:bg-black border-t border-gray-50 dark:border-gray-900 relative z-[100] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+        <div className="flex gap-4 w-full max-w-md mx-auto relative z-10">
           {step > 1 && (
             <button
               onClick={prevStep}
               className="p-5 bg-gray-50 dark:bg-gray-800 rounded-[28px] text-gray-900 dark:text-white active:scale-95 transition-all border border-gray-100 dark:border-gray-700"
             >
-              <ChevronLeft size={24} />
+              <GriddyIcon name="ArrowLeft" size={24} />
             </button>
           )}
           <button
@@ -268,11 +257,11 @@ export const WorkoutAssessment: React.FC<WorkoutAssessmentProps> = ({ onComplete
           >
             {step === 3 ? (
               <>
-                {t.finishAsessment} <Check size={20} strokeWidth={3} />
+                {t.finishAsessment} <GriddyIcon name="Check" size={20} />
               </>
             ) : (
               <>
-                {t.next} <ChevronRight size={20} strokeWidth={3} />
+                {t.next} <GriddyIcon name="ChevronRight" size={20} />
               </>
             )}
           </button>

@@ -1,0 +1,68 @@
+.email-button-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.email-button {
+  appearance: none;
+  background-color: #1cb0f6; /* Duolingo Blue */
+  border: 2px solid transparent; /* Keeps sizing consistent */
+  border-radius: 16px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "kineks-round-font", "Inter", sans-serif; /* Use app's rounded font */
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  line-height: 20px;
+  min-height: 48px;
+  min-width: 120px;
+  padding: 12px 24px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  
+  /* The 3D Shadow Effect */
+  box-shadow: 0px 4px 0px #1899d6; /* Darker blue shadow */
+  transform: translateY(0);
+}
+
+.email-button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0px 5px 0px #1899d6;
+}
+
+.email-button:active {
+  box-shadow: 0px 0px 0px #1899d6;
+  transform: translateY(4px);
+  filter: brightness(1.0);
+}
+
+.email-button:focus-visible {
+  outline: 2px solid #1cb0f6;
+  outline-offset: 4px;
+}
+
+/* Dark mode adjustments if necessary, but vibrant colors usually stay */
+.dark .email-button {
+  /* Ensuring contrast in dark mode */
+  box-shadow: 0px 4px 0px #1170a0;
+}
+
+.dark .email-button:hover {
+  box-shadow: 0px 5px 0px #1170a0;
+}
+
+.dark .email-button:active {
+  box-shadow: 0px 0px 0px #1170a0;
+}

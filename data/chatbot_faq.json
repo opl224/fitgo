@@ -1,0 +1,408 @@
+[
+  {
+    "id": "app_1",
+    "category": "app",
+    "question": {
+      "id": "Apa itu Fit GO?",
+      "en": "What is Fit GO?",
+      "jp": "Fit GOとは何ですか？"
+    },
+    "answer": {
+      "id": "Fit GO adalah aplikasi pelacak lari modern yang memiliki analisis performa dan MapLibre GL JS untuk pemetaan yang efisien dan hemat memori.",
+      "en": "Fit GO is a modern running tracker app that features performance analysis and MapLibre GL JS for efficient and memory-friendly mapping.",
+      "jp": "Fit GOは、効率的でメモリに優しいマッピングのためにMapLibre GL JSを備えた、モダンなランニング追跡アプリです。"
+    }
+  },
+  {
+    "id": "app_2",
+    "category": "app",
+    "question": {
+      "id": "Bagaimana cara menggunakan fitur Offline Maps?",
+      "en": "How to use Offline Maps?",
+      "jp": "オフラインマップ機能の使用方法は？"
+    },
+    "answer": {
+      "id": "Buka menu Peta Offline di Pengaturan, unduh area yang diinginkan, dan aktifkan mode offline saat berlari tanpa koneksi internet.",
+      "en": "Open the Offline Maps menu in Settings, download the desired area, and enable offline mode when running without an internet connection.",
+      "jp": "設定のオフラインマップメニューを開き、目的のエリアをダウンロードして、インターネット接続なしで走る際にオフラインモードを有効にします。"
+    }
+  },
+  {
+    "id": "app_3",
+    "category": "app",
+    "question": {
+      "id": "Versi aplikasi saat ini?",
+      "en": "Current app version?",
+      "jp": "現在のアプリのバージョンは？"
+    },
+    "answer": {
+      "id": "Fit GO versi 2.0 menghadirkan integrasi UI yang lebih bersih, dan manajemen cache peta yang ditingkatkan.",
+      "en": "Fit GO version 2.0 features a cleaner UI integration and improved map cache management.",
+      "jp": "Fit GOバージョン2.0は、より洗練されたUIの統合と、強化された地図キャッシュ管理を提供します。"
+    }
+  },
+  {
+    "id": "tips_1",
+    "category": "tips",
+    "question": {
+      "id": "Teknik dasar lari untuk pemula?",
+      "en": "Basic running techniques for beginners?",
+      "jp": "初心者のための基本的なランニングテクニックは？"
+    },
+    "answer": {
+      "id": "Mulailah dengan pemanasan 5-10 menit. Pastikan postur tubuh tegak, ayunan tangan santai, dan mendarat dengan bagian tengah kaki.",
+      "en": "Start with a 5-10 minute warm-up. Ensure an upright posture, relaxed arm swing, and land on the mid-foot.",
+      "jp": "5〜10分のウォーミングアップから始めてください。姿勢を直立させ、腕の振りをリラックスさせ、足の中央で着地するようにします。"
+    }
+  },
+  {
+    "id": "tips_2",
+    "category": "tips",
+    "question": {
+      "id": "Bagaimana mencegah cedera saat lari?",
+      "en": "How to prevent injuries while running?",
+      "jp": "ランニング中の怪我を防ぐには？"
+    },
+    "answer": {
+      "id": "Gunakan sepatu yang sesuai, tingkatkan jarak lari secara bertahap (aturan 10%), dan jangan abaikan hari istirahat.",
+      "en": "Use appropriate shoes, increase running distance gradually (10% rule), and do not ignore rest days.",
+      "jp": "適切な靴を使用し、走行距離を徐々に増やし（10％ルール）、休息日を無視しないでください。"
+    }
+  },
+  {
+    "id": "tips_3",
+    "category": "tips",
+    "question": {
+      "id": "Program latihan 5K untuk pemula?",
+      "en": "5K training program for beginners?",
+      "jp": "初心者のための5Kトレーニングプログラムは？"
+    },
+    "answer": {
+      "id": "Coba metode Run-Walk (Lari 1 menit, Jalan 2 menit) selama 30 menit, lakukan 3 kali seminggu selama 8 minggu.",
+      "en": "Try the Run-Walk method (1 min run, 2 min walk) for 30 minutes, 3 times a week for 8 weeks.",
+      "jp": "ランウォーク法（1分間走り、2分間歩く）を30分間試してみてください。これを週3回、8週間続けます。"
+    }
+  },
+  {
+    "id": "tips_4",
+    "category": "tips",
+    "question": {
+      "id": "Bagaimana cara mengatur napas agar tidak cepat lelah saat lari?",
+      "en": "How to control breathing so as not to get tired quickly when running?",
+      "jp": "ランニング中にすぐに疲れないように呼吸をコントロールするにはどうすればよいですか？"
+    },
+    "answer": {
+      "id": "Gunakan pola napas ritmis (misal: 2 langkah hirup, 2 langkah buang). Bernapaslah melalui mulut dan hidung secara bersamaan untuk asupan oksigen maksimal.",
+      "en": "Use a rhythmic breathing pattern (e.g., 2 steps inhale, 2 steps exhale). Breathe through your mouth and nose simultaneously for maximum oxygen intake.",
+      "jp": "リズムに乗った呼吸パターン（例：2歩吸って、2歩吐く）を使用します。最大の酸素摂取量を得るために、口と鼻から同時に呼吸します。"
+    }
+  },
+  {
+    "id": "tips_5",
+    "category": "tips",
+    "question": {
+      "id": "Apa itu Shin Splints dan bagaimana cara mengatasinya?",
+      "en": "What are Shin Splints and how to treat them?",
+      "jp": "シンスプリントとは何ですか？また、どのように治療しますか？"
+    },
+    "answer": {
+      "id": "Itu adalah rasa nyeri di tulang kering. Masalahnya biasanya karena sepatu yang kurang empuk atau menambah jarak lari terlalu drastis. Tips: Istirahatlah dan gunakan kompres es.",
+      "en": "It is pain in the shins. The problem is usually due to less cushioned shoes or increasing running distance too drastically. Tips: Rest and use ice packs.",
+      "jp": "それはすねの痛みです。問題は通常、クッション性の低い靴、または走行距離を急激に増やしすぎたことが原因です。ヒント：休息し、氷嚢を使用してください。"
+    }
+  },
+  {
+    "id": "tips_6",
+    "category": "tips",
+    "question": {
+      "id": "Mengapa pergelangan tangan saya sakit saat Push-up?",
+      "en": "Why does my wrist hurt during push-ups?",
+      "jp": "腕立て伏せのときに手首が痛むのはなぜですか？"
+    },
+    "answer": {
+      "id": "Biasanya karena posisi tangan terlalu jauh ke depan. Pastikan telapak tangan sejajar di bawah bahu. Jika masih sakit, coba gunakan kepalan tangan atau pegangan push-up (push-up bar).",
+      "en": "Usually because the hand position is too far forward. Make sure your palms are aligned under your shoulders. If it still hurts, try using your fists or push-up bars.",
+      "jp": "通常、手の位置が前すぎることが原因です。手のひらが肩の真下に来るようにしてください。それでも痛む場合は、拳を使うか、プッシュアップバーを試してください。"
+    }
+  },
+  {
+    "id": "tips_7",
+    "category": "tips",
+    "question": {
+      "id": "Bagaimana cara melakukan Squat Jump agar tidak merusak lutut?",
+      "en": "How to do Squat Jumps without damaging your knees?",
+      "jp": "膝を痛めずにスクワットジャンプをするには？"
+    },
+    "answer": {
+      "id": "Kuncinya adalah landing (mendarat). Mendaratlah dengan bagian depan kaki terlebih dahulu secara perlahan (tidak berbunyi keras) dan langsung tekuk lutut untuk menyerap benturan.",
+      "en": "The key is the landing. Land with the front of your feet first slowly (not loudly) and immediately bend your knees to absorb the impact.",
+      "jp": "鍵となるのは着地です。まず足の前部でゆっくりと（大きな音を立てずに）着地し、すぐに膝を曲げて衝撃を吸収します。"
+    }
+  },
+  {
+    "id": "tips_8",
+    "category": "tips",
+    "question": {
+      "id": "Lutut saya sakit saat melakukan Lunges, apa yang salah?",
+      "en": "My knee hurts when doing Lunges, what's wrong?",
+      "jp": "ランジをすると膝が痛むのですが、何が悪いのでしょうか？"
+    },
+    "answer": {
+      "id": "Pastikan lutut depan tidak melewati ujung jari kaki dan lutut belakang tidak menghantam lantai. Jaga tubuh tetap tegak, jangan condong ke depan.",
+      "en": "Make sure the front knee does not go past your toes and the back knee does not hit the floor. Keep your body upright, do not lean forward.",
+      "jp": "前膝がつま先より前に出ないようにし、後ろ膝が床に当たらないようにしてください。体は直立させ、前かがみにならないようにします。"
+    }
+  },
+  {
+    "id": "tips_9",
+    "category": "tips",
+    "question": {
+      "id": "Leher saya sering pegal setelah Sit-up, kenapa ya?",
+      "en": "My neck often feels stiff after sit-ups, why?",
+      "jp": "シットアップの後、よく首が凝るのですが、なぜですか？"
+    },
+    "answer": {
+      "id": "Itu tanda kamu menarik kepala dengan tangan, bukan menggunakan otot perut. Tips: Letakkan tangan di samping telinga atau silangkan di dada, dan fokuskan pandangan ke atas, bukan ke arah lutut.",
+      "en": "That's a sign you're pulling your head with your hands, not using your abs. Tips: Place your hands beside your ears or cross them on your chest, and focus your gaze upward, not toward your knees.",
+      "jp": "それは腹筋を使わずに手で頭を引っ張っている証拠です。ヒント：手を耳の横に置くか胸の前で交差させ、視線は膝ではなく上に集中させてください。"
+    }
+  },
+  {
+    "id": "tips_10",
+    "category": "tips",
+    "question": {
+      "id": "Berapa lama saya harus menahan posisi Plank?",
+      "en": "How long should I hold a Plank position?",
+      "jp": "プランクの姿勢はどのくらい維持すべきですか？"
+    },
+    "answer": {
+      "id": "Kualitas lebih penting dari durasi. Lebih baik 30 detik dengan punggung lurus dan perut kencang daripada 2 menit tapi punggung melengkung ke bawah (sakit pinggang).",
+      "en": "Quality is more important than duration. It's better to do 30 seconds with a straight back and tight abs than 2 minutes with a sagging back (back pain).",
+      "jp": "時間よりも質が重要です。背中を反らせて2分間耐える（腰痛の原因）よりも、背中を真っ直ぐにし、腹筋を引き締めて30秒間行う方が良いです。"
+    }
+  },
+  {
+    "id": "tips_11",
+    "category": "tips",
+    "question": {
+      "id": "Tips Pemanasan",
+      "en": "Warm-up Tips",
+      "jp": "ウォーミングアップのヒント"
+    },
+    "answer": {
+      "id": "Selalu lakukan pemanasan dinamis (putar tangan, lari di tempat) selama 5-10 menit sebelum mulai latihan intens agar otot tidak kaget.",
+      "en": "Always do dynamic warm-ups (arm circles, running in place) for 5-10 minutes before starting intense exercise so muscles don't get shocked.",
+      "jp": "筋肉が驚かないように、激しい運動を始める前に、必ず5〜10分間のダイナミックなウォーミングアップ（腕回し、その場走りなど）を行ってください。"
+    }
+  },
+  {
+    "id": "tips_12",
+    "category": "tips",
+    "question": {
+      "id": "Tips Konsumsi Air",
+      "en": "Water Consumption Tips",
+      "jp": "水分補給のヒント"
+    },
+    "answer": {
+      "id": "Jangan menunggu haus untuk minum. Minumlah sedikit-sedikit secara rutin selama latihan untuk menjaga performa jantung.",
+      "en": "Don't wait until you're thirsty to drink. Drink small amounts regularly during exercise to maintain heart performance.",
+      "jp": "喉が渇くまで待たないでください。心臓のパフォーマンスを維持するために、運動中は定期的かつ少量ずつ水分を補給してください。"
+    }
+  },
+  {
+    "id": "tips_13",
+    "category": "tips",
+    "question": {
+      "id": "Masalah Motivasi",
+      "en": "Motivation Issues",
+      "jp": "モチベーションの問題"
+    },
+    "answer": {
+      "id": "Ingat, konsistensi lebih penting daripada intensitas. Lebih baik latihan 15 menit setiap hari daripada 2 jam tapi hanya sebulan sekali.",
+      "en": "Remember, consistency is more important than intensity. It's better to exercise for 15 minutes every day than 2 hours but only once a month.",
+      "jp": "強さよりも継続が重要であることを忘れないでください。月に一度2時間運動するよりも、毎日15分間運動する方が良いです。"
+    }
+  },
+  {
+    "id": "trouble_1",
+    "category": "trouble",
+    "question": {
+      "id": "Masalah Akurasi GPS?",
+      "en": "GPS Accuracy issues?",
+      "jp": "GPSの精度に問題がありますか？"
+    },
+    "answer": {
+      "id": "Pastikan GPS aktif dan berada di area terbuka. Matikan penghemat baterai yang dapat membatasi akses GPS di latar belakang.",
+      "en": "Ensure GPS is active and you are in an open area. Turn off battery saver which might limit background GPS access.",
+      "jp": "GPSが有効で、開けた場所にいることを確認してください。バックグラウンドでのGPSアクセスを制限する可能性のあるバッテリーセーバーをオフにします。"
+    }
+  },
+  {
+    "id": "trouble_2",
+    "category": "trouble",
+    "question": {
+      "id": "Aplikasi tertutup sendiri (Force Close)?",
+      "en": "App closes by itself (Force Close)?",
+      "jp": "アプリが強制終了しますか？"
+    },
+    "answer": {
+      "id": "Coba bersihkan cache aplikasi di pengaturan profil atau instal ulang jika masalah berlanjut. Pastikan penyimpanan perangkat mencukupi.",
+      "en": "Try clearing the app cache in profile settings or reinstall if the problem persists. Ensure device storage is sufficient.",
+      "jp": "プロファイル設定でアプリのキャッシュをクリアするか、問題が解決しない場合は再インストールを試してください。デバイスのストレージが十分であることを確認してください。"
+    }
+  },
+  {
+    "id": "trouble_3",
+    "category": "trouble",
+    "question": {
+      "id": "Peta tidak muncul?",
+      "en": "Map not appearing?",
+      "jp": "マップが表示されませんか？"
+    },
+    "answer": {
+      "id": "Cek koneksi internet atau gunakan Offline Maps jika Anda sudah mengunduh data peta sebelumnya.",
+      "en": "Check your internet connection or use Offline Maps if you have previously downloaded map data.",
+      "jp": "インターネット接続を確認するか、以前にマップデータをダウンロードしたことがある場合はオフラインマップを使用してください。"
+    }
+  },
+  {
+    "id": "trouble_4",
+    "category": "trouble",
+    "question": {
+      "id": "Aplikasi tiba-tiba tertutup saat saya sedang lari, apakah data hilang?",
+      "en": "The app suddenly closed while I was running, is the data lost?",
+      "jp": "ランニング中にアプリが突然終了しました。データは失われましたか？"
+    },
+    "answer": {
+      "id": "Jangan khawatir, aplikasi kami menggunakan Local Storage yang menyimpan data setiap beberapa detik. Coba buka kembali aplikasi dan klik \"Lanjutkan Latihan\".",
+      "en": "Don't worry, our app uses Local Storage which saves data every few seconds. Try reopening the app and clicking \"Continue Workout\".",
+      "jp": "ご安心ください。当アプリは数秒ごとにデータを保存するローカルストレージを使用しています。アプリを再起動し、「トレーニングを続行」をクリックしてみてください。"
+    }
+  },
+  {
+    "id": "trouble_5",
+    "category": "trouble",
+    "question": {
+      "id": "Kenapa data latihan saya tidak muncul di riwayat?",
+      "en": "Why doesn't my workout data appear in history?",
+      "jp": "トレーニングデータが履歴に表示されないのはなぜですか？"
+    },
+    "answer": {
+      "id": "Jika kamu sedang offline, data disimpan di memori HP sementara. Pastikan kamu memiliki koneksi internet untuk sinkronisasi data ke riwayat utama.",
+      "en": "If you are offline, data is temporarily stored in your phone's memory. Make sure you have an internet connection to sync data to the main history.",
+      "jp": "オフラインの場合、データはスマートフォンのメモリに一時的に保存されます。メインの履歴にデータを同期するために、インターネットに接続されていることを確認してください。"
+    }
+  },
+  {
+    "id": "dev_1",
+    "category": "app",
+    "question": {
+      "id": "Tentang pengembang",
+      "en": "About developer",
+      "jp": "開発者について"
+    },
+    "answer": {
+      "id": "Tidak seorang pun :)",
+      "en": "Nobody :)",
+      "jp": "誰も :)"
+    }
+  },
+  {
+    "id": "tech_modern_1",
+    "category": "app",
+    "question": {
+      "id": "Apa saja teknologi yang digunakan FitGO?",
+      "en": "What technologies does FitGO use?",
+      "jp": "FitGOはどのような技術を使用していますか？"
+    },
+    "answer": {
+      "id": "FitGO dibangun dengan teknologi modern: React 19, TypeScript, Vite 6, Tailwind CSS, Framer Motion, Leaflet JS, dan OpenStreetMap untuk performa dan pengalaman terbaik.",
+      "en": "FitGO is built with modern technologies: React 19, TypeScript, Vite 6, Tailwind CSS, Framer Motion, Leaflet JS, and OpenStreetMap for the best performance and experience.",
+      "jp": "FitGOは、最高のパフォーマンスと体験のために、React 19、TypeScript、Vite 6、Tailwind CSS、Framer Motion、Leaflet JS、OpenStreetMapなどの最新技術で構築されています。"
+    }
+  },
+  {
+    "id": "tech_modern_2",
+    "category": "app",
+    "question": {
+      "id": "Bagaimana FitGO menangani data lokasi secara offline?",
+      "en": "How does FitGO handle location data offline?",
+      "jp": "FitGOはオフラインで位置データをどのように処理しますか？"
+    },
+    "answer": {
+      "id": "FitGO menggunakan Service Worker dan Cache API untuk menyimpan peta, serta Local Storage untuk menyimpan data lari Anda secara aman di perangkat tanpa perlu internet.",
+      "en": "FitGO uses Service Workers and Cache API to store maps, and Local Storage to securely store your running data on the device without needing internet.",
+      "jp": "FitGOは、マップを保存するためにService WorkerとCache APIを使用し、インターネットを必要とせずにデバイス上で走行データを安全に保存するためにLocal Storageを使用します。"
+    }
+  },
+  {
+    "id": "tech_modern_3",
+    "category": "app",
+    "question": {
+      "id": "Apa framework inti yang digunakan?",
+      "en": "What is the core framework used?",
+      "jp": "使用されているコアフレームワークは何ですか？"
+    },
+    "answer": {
+      "id": "Framework inti kami adalah React 19 dengan TypeScript, dikombinasikan dengan Vite 6 sebagai build tool untuk memastikan aplikasi ringan dan cepat.",
+      "en": "Our core framework is React 19 with TypeScript, combined with Vite 6 as a build tool to ensure the app is lightweight and fast.",
+      "jp": "コアフレームワークはReact 19とTypeScriptで、ビルドツールとしてVite 6を組み合わせることで、アプリの軽量化と高速化を実現しています。"
+    }
+  },
+  {
+    "id": "tech_react",
+    "category": "app",
+    "question": {
+      "id": "Apa itu React?",
+      "en": "What is React?",
+      "jp": "Reactとは何ですか？"
+    },
+    "answer": {
+      "id": "React adalah library JavaScript untuk membangun antarmuka pengguna (UI). FitGO menggunakan React 19 untuk performa maksimal dan rendering yang cepat.",
+      "en": "React is a JavaScript library for building user interfaces (UI). FitGO uses React 19 for maximum performance and fast rendering.",
+      "jp": "Reactはユーザーインターフェース（UI）を構築するためのJavaScriptライブラリです。FitGOは最高のパフォーマンスと高速なレンダリングのためにReact 19を使用しています。"
+    }
+  },
+  {
+    "id": "tech_typescript",
+    "category": "app",
+    "question": {
+      "id": "Apa itu TypeScript?",
+      "en": "What is TypeScript?",
+      "jp": "TypeScriptとは何ですか？"
+    },
+    "answer": {
+      "id": "TypeScript adalah bahasa pemrograman yang menambahkan tipe data ke JavaScript. Ini membantu kami menjaga kode FitGO tetap aman, bersih, dan bebas dari error.",
+      "en": "TypeScript is a programming language that adds types to JavaScript. It helps us keep FitGO's code safe, clean, and error-free.",
+      "jp": "TypeScriptはJavaScriptに型を追加するプログラミング言語です。これにより、FitGOのコードを安全、クリーン、かつエラーのない状態に保つことができます。"
+    }
+  },
+  {
+    "id": "tech_capacitor",
+    "category": "app",
+    "question": {
+      "id": "Apa itu Capacitor?",
+      "en": "What is Capacitor?",
+      "jp": "Capacitorとは何ですか？"
+    },
+    "answer": {
+      "id": "Capacitor adalah platform lintas platform yang memungkinkan FitGO berjalan sebagai aplikasi mobile (Android/iOS) menggunakan teknologi web.",
+      "en": "Capacitor is a cross-platform platform that allows FitGO to run as a mobile app (Android/iOS) using web technologies.",
+      "jp": "Capacitorは、Web技術を使用してFitGOをモバイルアプリ（Android / iOS）として実行できるようにするクロスプラットフォームプラットフォームです。"
+    }
+  },
+  {
+    "id": "app_map_tech",
+    "category": "app",
+    "question": {
+      "id": "Teknologi peta apa yang digunakan?",
+      "en": "What map technology is used?",
+      "jp": "どのような地図技術が使われていますか？"
+    },
+    "answer": {
+      "id": "FitGO menggunakan MapLibre GL JS untuk visualisasi rute lari yang sangat efisien dan mendukung performa tinggi pada perangkat mobile.",
+      "en": "FitGO uses MapLibre GL JS for highly efficient running route visualization and high performance on mobile devices.",
+      "jp": "FitGOは、モバイルデバイス上での非常に効率的な走行ルートの視覚化と高性能のためにMapLibre GL JSを使用しています。"
+    }
+  }
+]

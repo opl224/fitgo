@@ -1,13 +1,8 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Always use named parameter for initialization and obtain API key from environment
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-/**
- * Generates an AI coaching insight based on workout or run session data.
- * Uses gemini-3-flash-preview for quick and efficient text generation.
- */
 export const getCoachInsight = async (sessionData: any, language: string): Promise<string | null> => {
   try {
     const prompt = `You are a professional fitness coach. Analyze this session: ${JSON.stringify(sessionData)}. 
